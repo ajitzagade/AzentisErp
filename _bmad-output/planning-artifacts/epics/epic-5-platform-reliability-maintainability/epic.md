@@ -54,7 +54,7 @@ So that I have somewhere safe to test upstream changes before they touch a payin
 
 **Given** the production bench (Story 4.1)
 **When** a staging site is created
-**Then** it exists as one more site on that same bench — not a separate server (AD-9) — and mirrors the customization stack (`our_brand` + ERPNext fork) any tenant site would have
+**Then** it exists as one more site on that same bench — not a separate server (AD-9) — and mirrors the customization stack (`our_brand` + the pinned ERPNext dependency) any tenant site would have
 
 ## Story 5.4: Staged Upstream Update Rollout
 
@@ -62,24 +62,28 @@ As the platform operator,
 I want to verify an upstream Frappe/ERPNext update on staging before it touches any tenant,
 So a bad update never hits a paying client first.
 
+*(Revised 2026-07-10 — updates now mean re-pinning the pinned ERPNext/Frappe dependency to a newer upstream commit, not merging a fork; there is no fork to merge.)*
+
 **Acceptance Criteria:**
 
 **Given** a new upstream ERPNext/Frappe release
-**When** `git fetch upstream && git merge upstream/version-15` runs against the fork
+**When** `apps/erpnext` (or `apps/frappe`) is re-pinned to the new commit/tag (`git fetch origin && git checkout <new-commit>` against the pinned, unforked upstream repo, followed by `bench migrate`)
 **Then** it's applied and tested on the staging site (Story 5.3) first
 
 **Given** staging verification passes
 **When** the update is rolled out
-**Then** it's applied to production tenant sites only after that verification — never before (FR16)
+**Then** the same commit/tag pin is applied to production tenant sites only after that verification — never before (FR16)
 
-## Story 5.5: Prove Customization Isolation via a Real Merge
+## Story 5.5: Prove Customization Isolation via a Real Upstream Update
 
 As the platform operator,
-I want direct evidence that our customizations survive an upstream merge,
+I want direct evidence that our customizations survive an upstream update,
 So "isolation" isn't just a design intention.
+
+*(Revised 2026-07-10 — "via a Real Merge" renamed; without a fork, there's no merge to perform. The proof now comes from re-pinning to a new upstream commit and confirming nothing in `our_brand` breaks.)*
 
 **Acceptance Criteria:**
 
-**Given** a real upstream merge is performed (Story 5.4's process, on staging)
-**When** the merge completes
-**Then** it produces zero or near-zero conflicts outside the `our_brand` app directory (FR15's stated testable consequence) — and any conflict that does occur is documented as a precedent for future merges
+**Given** a real upstream re-pin is performed (Story 5.4's process, on staging)
+**When** the new commit is checked out and `bench migrate` completes
+**Then** `our_brand` requires zero code changes to keep working (FR15's stated testable consequence) — and if anything in `our_brand` *does* need adjustment because an upstream hook/API changed, that's documented as a precedent for future updates

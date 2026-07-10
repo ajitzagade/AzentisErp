@@ -11,28 +11,30 @@ Run one Frappe/ERPNext instance where every trace of Frappe/ERPNext branding is 
 
 **FRs covered:** FR1, FR2, FR3, FR7, FR8
 **NFRs relevant:** NFR7 (GPLv3 headers/notices untouched), NFR8 (no core source edits), NFR2 (flexibility — config-driven, not hardcoded)
-**Architecture:** AD-1 (fork ERPNext only, stock Frappe Framework; Branding App scaffold, `our_brand`), AD-2 (Tenant Settings Single DocType + cached accessor), AD-3 (live CSS injection, never a compiled asset)
+**Architecture:** AD-1 (ERPNext and Frappe Framework both pinned, unforked dependencies; Branding App scaffold, `our_brand`, is the only versioned code), AD-2 (Tenant Settings Single DocType + cached accessor), AD-3 (live CSS injection, never a compiled asset)
 
-## Story 1.1: Fork ERPNext and Bootstrap the Base Platform
+## Story 1.1: Pull ERPNext and Bootstrap the Base Platform
 
 As the platform operator,
-I want our own fork of ERPNext running on a Frappe Bench,
-So that we have a controlled, mergeable codebase to build every later customization on top of.
+I want ERPNext running on a Frappe Bench, pulled directly from upstream and pinned,
+So that we have a stable, upgradable foundation to build every later customization on top of, without owning or maintaining a fork.
+
+*(Revised 2026-07-10 — the original plan forked ERPNext under our org; that's been dropped in favor of pinning directly to upstream, so we never risk pushing to `frappe/erpnext` and all our own changes live in one repo, `ajitzagade/AzentisErp`.)*
 
 **Acceptance Criteria:**
 
-**Given** GitHub org access
-**When** ERPNext is forked under our org
-**Then** `github.com/ajitzagade/erpnext` exists as our controlled copy, on the `version-15` branch (PRD §10.7)
-
-**Given** a bench initialized with stock Frappe Framework (`bench init --frappe-branch version-15`, from the official `frappe/frappe` — deliberately NOT forked, per AD-1/PRD §10.7)
-**When** `bench get-app erpnext` pulls from our fork's URL
-**Then** the bench's installed apps include our forked ERPNext, not a direct pull from the upstream `frappe/erpnext` repo
+**Given** a bench initialized with stock Frappe Framework (`bench init --frappe-branch version-15`, from the official `frappe/frappe` — not forked)
+**When** `bench get-app erpnext --branch version-15` pulls directly from `https://github.com/frappe/erpnext`
+**Then** the bench's installed apps include ERPNext pinned to that branch/commit, sourced straight from the official upstream repo — no separate fork repo exists or is needed
 
 **Given** a new site on this bench
 **When** `install-app erpnext` runs
 **Then** the setup wizard completes and all inherited ERPNext modules load, with zero customization applied yet
-**And** this story introduces no customization of its own — it is the unmodified inherited foundation every later story in this epic brands on top of (this is the exact point from which AD-1's "core is never modified" starts being a checkable fact, e.g. via `git diff` against upstream)
+**And** this story introduces no customization of its own — it is the unmodified inherited foundation every later story in this epic brands on top of (this is the exact point from which AD-1's "core is never modified, never pushed to" starts being a checkable fact, e.g. via `git diff` against the pinned upstream commit)
+
+**Given** `apps/frappe` and `apps/erpnext` inside the Bench
+**When** the project's own repo (`ajitzagade/AzentisErp`) is configured
+**Then** both directories are gitignored — never version-controlled or pushed by us — while `our_brand` (scaffolded in Story 1.2) is the only app tracked and pushed to `ajitzagade/AzentisErp`
 
 ## Story 1.2: Platform Brand Override
 
@@ -42,7 +44,7 @@ So that no page shows "Frappe" or "ERPNext" as the product name.
 
 **Acceptance Criteria:**
 
-**Given** the base platform from Story 1.1 (forked ERPNext installed, unmodified)
+**Given** the base platform from Story 1.1 (ERPNext installed, pinned and unmodified)
 **When** `our_brand` is scaffolded (`bench new-app`) and installed
 **Then** `app_name`/`app_title`/`app_publisher`/`app_logo_url` in `hooks.py` reflect our brand, not Frappe's defaults
 

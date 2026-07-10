@@ -10,7 +10,7 @@ updated: 2026-07-10
 
 ## 0. Document Purpose
 
-This PRD scopes AzentisERP: a rebranded, self-hosted, multi-tenant ERP/CRM SaaS platform built by forking Frappe Framework and ERPNext (GPLv3). It is written for the builder (solo, AI-assisted) and doubles as the spine for downstream Architecture and Epics/Stories work. Terms are Glossary-anchored (§3); functional requirements are grouped by feature (§4) and numbered globally (FR-1…); inferred content is tagged inline `[ASSUMPTION]` and indexed in §9. The step-by-step technical mechanics (bench commands, DocType field lists, hooks.py structure, architecture diagram) already captured in `docs/product.md` are preserved verbatim in `addendum.md` — this PRD describes *what* the system must do, not *how* the fork implements it.
+This PRD scopes AzentisERP: a rebranded, self-hosted, multi-tenant ERP/CRM SaaS platform built on top of Frappe Framework and ERPNext (GPLv3) as pinned, unforked upstream dependencies. It is written for the builder (solo, AI-assisted) and doubles as the spine for downstream Architecture and Epics/Stories work. Terms are Glossary-anchored (§3); functional requirements are grouped by feature (§4) and numbered globally (FR-1…); inferred content is tagged inline `[ASSUMPTION]` and indexed in §9. The step-by-step technical mechanics (bench commands, DocType field lists, hooks.py structure, architecture diagram) already captured in `docs/product.md` are preserved verbatim in `addendum.md` — this PRD describes *what* the system must do, not *how* the dependency is consumed.
 
 ## 1. Vision
 
@@ -52,7 +52,7 @@ The product's differentiation is not the ERP functionality itself — it's the s
 - **UJ-3. Ajit rolls out an upstream ERPNext security patch across all tenants.**
   - **Persona + context:** Ajit, now running 15 tenant sites, is notified of an upstream ERPNext security release.
   - **Entry state:** On the management server, staging site available.
-  - **Path:** Merges upstream into the fork → tests on staging → runs the update across all tenant sites.
+  - **Path:** Re-pins the Bench to the newer upstream ERPNext version → tests on staging → runs the update across all tenant sites.
   - **Climax:** All 15 sites patch successfully with zero branding regressions, because customizations live entirely in the separate `our_brand` app.
   - **Resolution:** Patch confirmed applied fleet-wide; incident (if any) closed.
   - **Edge case:** A merge conflict appears in `our_brand`-adjacent hook code — Ajit resolves it once, centrally, rather than per-tenant.
@@ -61,12 +61,12 @@ The product's differentiation is not the ERP functionality itself — it's the s
 
 - **Tenant** — One client business using an isolated site (own database, own domain/subdomain, own branding and enabled-module set).
 - **Site** — A Frappe Bench-managed instance bound to a tenant; one site per tenant, isolated database.
-- **Bench** — The shared Frappe Bench installation hosting all tenant sites on one server (shared codebase: Frappe Framework, the ERPNext fork, the branding app).
+- **Bench** — The shared Frappe Bench installation hosting all tenant sites on one server (shared codebase: Frappe Framework, ERPNext — both pinned, unforked dependencies — and the branding app).
 - **Branding App** *(working name: `our_brand`, final app name TBD)* — The custom Frappe app holding all white-label customizations (CSS, logo, email templates, login page), kept separate from Frappe/ERPNext source so upstream updates stay mergeable.
 - **Tenant Settings** — A per-site configuration record (DocType) holding a tenant's branding (logo, colors, favicon) and `enabled_modules`.
 - **Module Preset** — A named bundle of `enabled_modules` matching a common business type (Retail, Services, Manufacturing, General) applied at onboarding.
 - **Provisioning** — The automated process of creating a new tenant site, installing apps, applying branding, enabling modules, and creating the admin user.
-- **Upstream** — The original Frappe Framework and ERPNext open-source projects this platform forks from and periodically merges updates from.
+- **Upstream** — The original Frappe Framework and ERPNext open-source projects this platform depends on (pinned, unforked) and periodically re-pins to newer versions of.
 
 ## 4. Features
 
@@ -105,7 +105,7 @@ The system provisions a new, independent site per tenant with its own database, 
 The system routes incoming requests to the correct tenant site based on the request's domain/subdomain (DNS-based multi-tenancy), so each tenant can use its own domain.
 
 #### FR-6: Repeatable provisioning script
-The system provides a single scripted/automated path (not manual per-step CLI work) that creates a new site, installs the ERPNext fork and Branding App, sets the admin password, and completes initial setup.
+The system provides a single scripted/automated path (not manual per-step CLI work) that creates a new site, installs ERPNext (pinned dependency) and the Branding App, sets the admin password, and completes initial setup.
 
 **Out of Scope:** Multi-server / geographically distributed provisioning — single shared server is the MVP target (§6).
 
@@ -174,7 +174,7 @@ The production server exposes only ports 80/443 publicly; administrative access 
 
 ### 4.7 Upstream Update & Maintainability
 
-**Description:** Because AzentisERP is a fork, not a from-scratch product, its long-term viability depends on staying mergeable with upstream Frappe/ERPNext without re-doing customization work. Realizes UJ-3.
+**Description:** Because AzentisERP is built on top of ERPNext as a pinned dependency, not a from-scratch product, its long-term viability depends on being able to move to newer upstream Frappe/ERPNext versions without re-doing customization work. Realizes UJ-3.
 
 #### FR-15: Customization isolation
 All product customizations (branding, tenant config, module toggling) live exclusively in the Branding App and DocType/Custom Field layer — never as edits to Frappe or ERPNext source.
@@ -201,7 +201,7 @@ The system supports testing an upstream merge on a staging site before it is app
 **`[NOTE FOR PM]`** The full 8-phase plan in `docs/product.md` (and mirrored in `addendum.md`) is the complete long-term build. Given a **solo, AI-assisted builder targeting a 1-month launch**, the cut below is what this PRD treats as MVP-required; the rest is explicitly deferred. **This split is an `[ASSUMPTION]` — confirm before Architecture/Epics work begins** (Open Question 1).
 
 ### 6.1 In Scope (MVP)
-- Local dev environment + forked ERPNext installable (Phase 1 of `docs/product.md`).
+- Local dev environment + ERPNext installable, pinned/unforked (Phase 1 of `docs/product.md`).
 - Full Branding App: logo, colors, login page, navbar/footer, email templates (FR-1–FR-3).
 - DNS-based multi-tenancy with isolated per-tenant sites (FR-4–FR-6).
 - Tenant Settings DocType + dynamic branding injection (FR-7–FR-8).
@@ -269,7 +269,7 @@ Pricing is **flexible, negotiated per client** rather than a fixed published tie
 
 ## Integration and Dependencies
 
-- **ERPNext** is forked under our GitHub org — `ajitzagade` (`version-15` branch, `bench get-app erpnext https://github.com/ajitzagade/erpnext`). **Frappe Framework itself is *not* forked** — installed from the official `frappe/frappe` repo via `bench init --frappe-branch version-15` — because no customization touches the framework layer; only the ERPNext app layer and the separate Branding App carry customization. *(Resolved decision — see §10.)*
+- **Neither ERPNext nor Frappe Framework is forked.** Both are pulled directly from their official upstream repos — ERPNext via `bench get-app erpnext https://github.com/frappe/erpnext --branch version-15`, Frappe Framework via `bench init --frappe-branch version-15` — pinned to a specific `version-15` commit and treated as read-only dependencies, never modified, never pushed to. Our own code (the Branding App, `our_brand`) is the only thing version-controlled, in a single repo: `github.com/ajitzagade/AzentisErp`. *(Resolved decision — see §10.)*
 - **MariaDB**, **Redis**, **Nginx/Gunicorn/Supervisor** are inherited infrastructure dependencies from the Frappe stack (see `addendum.md` for versions/config).
 - Upstream release cadence is out of this platform's control; §4.7 (FR-15/16) governs how updates are absorbed.
 
@@ -293,7 +293,7 @@ Pricing is **flexible, negotiated per client** rather than a fixed published tie
 - §Cross-Cutting NFRs (Availability) — no formal SLA assumed for MVP (§10.3).
 - §Monetization — pricing model treated as an open business decision outside system requirements (§10.2).
 - §Data Governance — data residency resolved to India-hosted (§10.4).
-- §Integration and Dependencies — only ERPNext is forked at the repo level; Frappe Framework is used stock from upstream (§10.7).
+- §Integration and Dependencies — neither ERPNext nor Frappe Framework is forked; both are pinned, unforked upstream dependencies. Only `our_brand` is version-controlled, in a single repo (`ajitzagade/AzentisErp`) (§10.7).
 
 ## 10. Resolved Decisions (locked in to unblock Architecture)
 
@@ -305,4 +305,4 @@ Made explicitly to keep the 1-month solo timeline moving; each is a default, not
 4. **Data residency** — India-hosted infrastructure.
 5. **Launch vertical** — "General" preset first; second preset chosen when the first real client's business type is known.
 6. **Module dependency enforcement** — warn-only, not hard-blocked, at MVP.
-7. **Fork scope** — fork ERPNext only; Frappe Framework used stock from `frappe/frappe` upstream (no separate Frappe fork maintained).
+7. **Fork scope — revised (2026-07-10):** neither ERPNext nor Frappe Framework is forked. Both are pulled directly from their official upstream repos (`frappe/frappe`, `frappe/erpnext`), pinned to `version-15`, and treated as read-only dependencies — never modified, never pushed to. Our own code (`our_brand`, the Branding App) is the only thing version-controlled, in one repo: `github.com/ajitzagade/AzentisErp`. Staged updates (FR-16) mean re-pinning to a newer upstream commit/tag and testing on staging first, not merging a fork. *(Original decision, "fork ERPNext only," superseded — see PRD/Architecture memlogs for the reasoning.)*

@@ -17,7 +17,7 @@
 1. Install prerequisites: Python 3.10+, Node 18+, MariaDB 10.6+, Redis, wkhtmltopdf, yarn, git, pip.
 2. `pip install frappe-bench`
 3. `bench init myerp --frappe-branch version-15` *(stock Frappe Framework from official `frappe/frappe` — not forked; PRD §10.7 decision)*
-4. `bench get-app erpnext https://github.com/ajitzagade/erpnext --branch version-15` *(forked ERPNext under our org)*
+4. `bench get-app erpnext https://github.com/frappe/erpnext --branch version-15` *(pulled directly from upstream, pinned to version-15 — not forked; PRD §10.7 revised decision)*
 5. `bench new-site dev.local`
 6. `bench --site dev.local install-app erpnext`
 7. `bench start`
@@ -114,9 +114,10 @@ Target: under 10 minutes per client (PRD SM-2).
 │  └─────────┘  └─────────┘  └─────────┘  │
 │                                          │
 │  Shared Codebase:                        │
-│  - Frappe Framework                      │
-│  - ERPNext (our fork)                    │
-│  - our_brand (custom branding app)       │
+│  - Frappe Framework (pinned, unforked)   │
+│  - ERPNext (pinned, unforked)            │
+│  - our_brand (custom branding app,       │
+│    our only versioned code)              │
 │                                          │
 │  Nginx → Gunicorn → Frappe/ERPNext       │
 │  MariaDB (separate DB per site)          │
@@ -124,4 +125,4 @@ Target: under 10 minutes per client (PRD SM-2).
 └─────────────────────────────────────────┘
 ```
 
-*Full architectural decisions (fork strategy, hook boundaries, DB-per-tenant confirmation) belong to `bmad-architecture`, not this addendum — this is the mechanics as scoped going in.*
+*Full architectural decisions (dependency-pinning strategy, hook boundaries, DB-per-tenant confirmation) belong to `bmad-architecture`, not this addendum — this is the mechanics as scoped going in.*

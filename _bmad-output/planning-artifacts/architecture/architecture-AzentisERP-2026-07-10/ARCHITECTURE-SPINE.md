@@ -4,7 +4,7 @@ type: architecture-spine
 purpose: build-substrate
 altitude: feature
 paradigm: 'Frappe Hook/Plugin Extension (runtime) + Idempotent CLI Pipeline (provisioning)'
-scope: 'The AzentisERP platform layer: multi-tenant provisioning, white-label branding, and per-tenant module toggling built on a forked ERPNext (stock Frappe Framework, unforked). Governs everything the PRD (§4, FR-1–FR-16) adds on top of inherited ERPNext/Frappe functionality.'
+scope: 'The AzentisERP platform layer: multi-tenant provisioning, white-label branding, and per-tenant module toggling built on top of ERPNext and Frappe Framework as pinned, unforked upstream dependencies (version-15). Governs everything the PRD (§4, FR-1–FR-16) adds on top of inherited ERPNext/Frappe functionality.'
 status: final
 created: '2026-07-10'
 updated: '2026-07-10'
@@ -31,21 +31,22 @@ Layer → namespace mapping:
 
 ## Invariants & Rules
 
-### AD-1 — Customization lives only in the Branding App
+### AD-1 — Customization lives only in the Branding App; ERPNext/Frappe are pinned dependencies, never forked or pushed to
 
 - **Binds:** all FRs (platform-wide)
-- **Prevents:** a direct edit to Frappe/ERPNext source for a "quick fix," breaking upstream mergeability (FR-15, FR-16)
-- **Rule:** All product behavior (branding, Tenant Settings, module toggling, provisioning) lives in the Branding App (`our_brand`) and the Custom Field/Custom DocType layer. Dependency direction is one-way: `our_brand` → Frappe/ERPNext APIs. Frappe/ERPNext core is never modified and never imports from `our_brand`.
+- **Prevents:** a direct edit to Frappe/ERPNext source for a "quick fix," breaking upstream mergeability (FR-15, FR-16); also prevents treating a forked copy as a repo we own/push to, which was the original plan but is now explicitly rejected
+- **Rule:** All product behavior (branding, Tenant Settings, module toggling, provisioning) lives in the Branding App (`our_brand`) and the Custom Field/Custom DocType layer. Dependency direction is one-way: `our_brand` → Frappe/ERPNext APIs. Frappe/ERPNext core is never modified and never imports from `our_brand`. **Neither Frappe Framework nor ERPNext is forked.** Both are pulled directly from their official upstream repos (`frappe/frappe`, `frappe/erpnext`), pinned to `version-15` (a specific branch/commit, not "whatever upstream currently has"), and are treated as read-only dependencies — never modified, never pushed to. `apps/frappe` and `apps/erpnext` inside the Bench are gitignored in our own repo (`ajitzagade/AzentisErp`), the same way a `node_modules`-style dependency would be. Only `our_brand` — our actual product code — is version-controlled and pushed, to `ajitzagade/AzentisErp`. Staged updates (FR-16, AD-9's staging site) mean re-pinning to a newer upstream commit/tag and testing it on staging first, not merging a fork.
 
 ```mermaid
 graph LR
   OB[our_brand app] -->|hooks.py, frappe.* calls| FW[Frappe Framework]
-  OB -->|extends via Custom Fields/DocTypes| EN[ERPNext fork]
+  OB -->|extends via Custom Fields/DocTypes| EN[ERPNext, pinned dependency]
   PROV[Provisioning pipeline] -->|bench CLI| SITE[Tenant Site]
   PROV -->|installs| OB
   PROV -->|installs| EN
-  FW -.->|never depends on| OB
-  EN -.->|never depends on| OB
+  FW -.->|never depends on, never pushed to| OB
+  EN -.->|never depends on, never pushed to| OB
+  REPO["ajitzagade/AzentisErp (git)"] -.->|tracks only| OB
 ```
 
 ### AD-2 — Tenant Settings is the single source of branding/module truth per site
@@ -121,7 +122,7 @@ graph LR
 | Name | Version |
 | --- | --- |
 | Frappe Framework | `version-15` branch, stock (unforked) from `frappe/frappe` — verified requires Python 3.11+, Node 18+, MariaDB 10.3.x minimum |
-| ERPNext | `version-15` branch, forked under our GitHub org |
+| ERPNext | `version-15` branch, stock (unforked) from `frappe/erpnext`, pinned to a specific commit — never modified, never pushed to |
 | Python | 3.11+ |
 | Node.js | 20 LTS or 22 LTS for actual deployment (Frappe v15's stated floor is 18+, but Node 18 itself has been EOL since April 2025 — do not deploy on it) |
 | MariaDB | 10.11+ (verified v15 floor is 10.3.x; 10.6 reached EOL July 2026, so 10.11 — the current LTS — is the deploy floor, not just a "safer" choice) |

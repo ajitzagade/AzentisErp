@@ -18,7 +18,7 @@ FR2: The system allows overriding primary/accent colors, login page styling, and
 FR3: Email templates (welcome, notifications, password reset) render with the operator's or tenant's brand name and footer text instead of default Frappe/ERPNext text.
 FR4: The system provisions a new, independent site per tenant with its own database, isolated from every other tenant's data.
 FR5: The system routes incoming requests to the correct tenant site based on the request's domain/subdomain (DNS-based multi-tenancy), so each tenant can use its own domain.
-FR6: The system provides a single scripted/automated path that creates a new site, installs the ERPNext fork and Branding App, sets the admin password, and completes initial setup.
+FR6: The system provides a single scripted/automated path that creates a new site, installs ERPNext (pinned dependency) and Branding App, sets the admin password, and completes initial setup.
 FR7: The system provides a per-site configuration capability (Tenant Settings) covering: tenant/company name, logo, favicon, login background, primary/secondary colors, email sender name, email footer text, and custom domain.
 FR8: The system reads a site's Tenant Settings on page load and applies that tenant's branding (colors, logo) without requiring a code deployment or restart.
 FR9: The system allows enabling or disabling ERPNext modules independently per tenant, reflected by hiding/showing them in the sidebar.
@@ -55,7 +55,7 @@ NFR10: Staged verification — every upstream merge is verified on a staging sit
 - **Provisioning invocation:** A `bench` custom command run directly on the production server (operator SSH session) — no hosted/remote onboarding API at MVP (AD-8).
 - **Staging environment:** One more site on the same production bench, not a separate server — used exclusively to verify upstream merges before fleet rollout (AD-9).
 - **Infrastructure/deployment:** Single production server, Ubuntu 22.04+, min 4GB RAM / 2 vCPU, India-hosted region; Nginx + Gunicorn managed by Supervisor via `bench setup production`; MariaDB + Redis colocated on the same server.
-- **Stack pins:** Frappe Framework `version-15` (stock, unforked, from `frappe/frappe`), ERPNext `version-15` (forked under our GitHub org), Python 3.11+, Node.js 20/22 LTS for actual deployment, MariaDB 10.11+, Redis latest stable.
+- **Stack pins:** Frappe Framework `version-15` (stock, unforked, from `frappe/frappe`), ERPNext `version-15` (stock, unforked, pinned to a specific commit from `frappe/erpnext` — no fork; `our_brand` is our only versioned code, pushed to `ajitzagade/AzentisErp`), Python 3.11+, Node.js 20/22 LTS for actual deployment, MariaDB 10.11+, Redis latest stable.
 - **Backup mechanism:** Frappe's native S3-compatible backup path (`s3_backup_enabled` + `s3_backup_region` in `site_config.json`), targeting an S3-compatible bucket in `ap-south-1` (Mumbai) — our choice per India data-residency, not a Frappe default (AD-10).
 - **Monitoring/logging:** Explicitly deferred beyond MVP — daily backups + manual checks only; no uptime/alerting dashboard at launch.
 - **Cross-site data access:** No cross-site DB connections from application/hook code, ever; any platform-wide view is produced by iterating the bench's site list externally, never a live cross-database query.
@@ -92,7 +92,7 @@ FR11: Epic 4 - One-action client onboarding
 FR12: Epic 4 - TLS for every tenant domain
 FR13: Epic 5 - Automated backups
 FR14: Epic 5 - Network access control
-FR15: Epic 5 - Customization isolation (proven via merge test)
+FR15: Epic 5 - Customization isolation (proven via a real upstream re-pin/update test)
 FR16: Epic 5 - Staged rollout of upstream updates
 
 ## Epic List
@@ -125,28 +125,30 @@ Run one Frappe/ERPNext instance where every trace of Frappe/ERPNext branding is 
 
 **FRs covered:** FR1, FR2, FR3, FR7, FR8
 **NFRs relevant:** NFR7 (GPLv3 headers/notices untouched), NFR8 (no core source edits), NFR2 (flexibility — config-driven, not hardcoded)
-**Architecture:** AD-1 (fork ERPNext only, stock Frappe Framework; Branding App scaffold, `our_brand`), AD-2 (Tenant Settings Single DocType + cached accessor), AD-3 (live CSS injection, never a compiled asset)
+**Architecture:** AD-1 (ERPNext and Frappe Framework both pinned, unforked dependencies; Branding App scaffold, `our_brand`, is the only versioned code), AD-2 (Tenant Settings Single DocType + cached accessor), AD-3 (live CSS injection, never a compiled asset)
 
-### Story 1.1: Fork ERPNext and Bootstrap the Base Platform
+### Story 1.1: Pull ERPNext and Bootstrap the Base Platform
 
 As the platform operator,
-I want our own fork of ERPNext running on a Frappe Bench,
-So that we have a controlled, mergeable codebase to build every later customization on top of.
+I want ERPNext running on a Frappe Bench, pulled directly from upstream and pinned,
+So that we have a stable, upgradable foundation to build every later customization on top of, without owning or maintaining a fork.
+
+*(Revised 2026-07-10 — the original plan forked ERPNext under our org; that's been dropped in favor of pinning directly to upstream, so we never risk pushing to `frappe/erpnext` and all our own changes live in one repo, `ajitzagade/AzentisErp`.)*
 
 **Acceptance Criteria:**
 
-**Given** GitHub org access
-**When** ERPNext is forked under our org
-**Then** `github.com/ajitzagade/erpnext` exists as our controlled copy, on the `version-15` branch (PRD §10.7)
-
-**Given** a bench initialized with stock Frappe Framework (`bench init --frappe-branch version-15`, from the official `frappe/frappe` — deliberately NOT forked, per AD-1/PRD §10.7)
-**When** `bench get-app erpnext` pulls from our fork's URL
-**Then** the bench's installed apps include our forked ERPNext, not a direct pull from the upstream `frappe/erpnext` repo
+**Given** a bench initialized with stock Frappe Framework (`bench init --frappe-branch version-15`, from the official `frappe/frappe` — not forked)
+**When** `bench get-app erpnext --branch version-15` pulls directly from `https://github.com/frappe/erpnext`
+**Then** the bench's installed apps include ERPNext pinned to that branch/commit, sourced straight from the official upstream repo — no separate fork repo exists or is needed
 
 **Given** a new site on this bench
 **When** `install-app erpnext` runs
 **Then** the setup wizard completes and all inherited ERPNext modules load, with zero customization applied yet
-**And** this story introduces no customization of its own — it is the unmodified inherited foundation every later story in this epic brands on top of (this is the exact point from which AD-1's "core is never modified" starts being a checkable fact, e.g. via `git diff` against upstream)
+**And** this story introduces no customization of its own — it is the unmodified inherited foundation every later story in this epic brands on top of (this is the exact point from which AD-1's "core is never modified, never pushed to" starts being a checkable fact, e.g. via `git diff` against the pinned upstream commit)
+
+**Given** `apps/frappe` and `apps/erpnext` inside the Bench
+**When** the project's own repo (`ajitzagade/AzentisErp`) is configured
+**Then** both directories are gitignored — never version-controlled or pushed by us — while `our_brand` (scaffolded in Story 1.2) is the only app tracked and pushed to `ajitzagade/AzentisErp`
 
 ### Story 1.2: Platform Brand Override
 
@@ -156,7 +158,7 @@ So that no page shows "Frappe" or "ERPNext" as the product name.
 
 **Acceptance Criteria:**
 
-**Given** the base platform from Story 1.1 (forked ERPNext installed, unmodified)
+**Given** the base platform from Story 1.1 (ERPNext installed, pinned and unmodified)
 **When** `our_brand` is scaffolded (`bench new-app`) and installed
 **Then** `app_name`/`app_title`/`app_publisher`/`app_logo_url` in `hooks.py` reflect our brand, not Frappe's defaults
 
@@ -578,7 +580,7 @@ So that I have somewhere safe to test upstream changes before they touch a payin
 
 **Given** the production bench (Story 4.1)
 **When** a staging site is created
-**Then** it exists as one more site on that same bench — not a separate server (AD-9) — and mirrors the customization stack (`our_brand` + ERPNext fork) any tenant site would have
+**Then** it exists as one more site on that same bench — not a separate server (AD-9) — and mirrors the customization stack (`our_brand` + the pinned ERPNext dependency) any tenant site would have
 
 ### Story 5.4: Staged Upstream Update Rollout
 
@@ -586,24 +588,28 @@ As the platform operator,
 I want to verify an upstream Frappe/ERPNext update on staging before it touches any tenant,
 So a bad update never hits a paying client first.
 
+*(Revised 2026-07-10 — updates now mean re-pinning the pinned ERPNext/Frappe dependency to a newer upstream commit, not merging a fork; there is no fork to merge.)*
+
 **Acceptance Criteria:**
 
 **Given** a new upstream ERPNext/Frappe release
-**When** `git fetch upstream && git merge upstream/version-15` runs against the fork
+**When** `apps/erpnext` (or `apps/frappe`) is re-pinned to the new commit/tag (`git fetch origin && git checkout <new-commit>` against the pinned, unforked upstream repo, followed by `bench migrate`)
 **Then** it's applied and tested on the staging site (Story 5.3) first
 
 **Given** staging verification passes
 **When** the update is rolled out
-**Then** it's applied to production tenant sites only after that verification — never before (FR16)
+**Then** the same commit/tag pin is applied to production tenant sites only after that verification — never before (FR16)
 
-### Story 5.5: Prove Customization Isolation via a Real Merge
+### Story 5.5: Prove Customization Isolation via a Real Upstream Update
 
 As the platform operator,
-I want direct evidence that our customizations survive an upstream merge,
+I want direct evidence that our customizations survive an upstream update,
 So "isolation" isn't just a design intention.
+
+*(Revised 2026-07-10 — "via a Real Merge" renamed; without a fork, there's no merge to perform. The proof now comes from re-pinning to a new upstream commit and confirming nothing in `our_brand` breaks.)*
 
 **Acceptance Criteria:**
 
-**Given** a real upstream merge is performed (Story 5.4's process, on staging)
-**When** the merge completes
-**Then** it produces zero or near-zero conflicts outside the `our_brand` app directory (FR15's stated testable consequence) — and any conflict that does occur is documented as a precedent for future merges
+**Given** a real upstream re-pin is performed (Story 5.4's process, on staging)
+**When** the new commit is checked out and `bench migrate` completes
+**Then** `our_brand` requires zero code changes to keep working (FR15's stated testable consequence) — and if anything in `our_brand` *does* need adjustment because an upstream hook/API changed, that's documented as a precedent for future updates
