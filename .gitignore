@@ -32,3 +32,14 @@ _bmad/tea/
 _bmad/bmb/
 _bmad/bmad-loop/
 _bmad/core/
+
+# Frappe Bench (myerp/) -- ERPNext and Frappe Framework are pinned, unforked
+# upstream dependencies (Story 1.1 / Architecture AD-1), never modified or
+# pushed to. Whitelist pattern: ignore everything under myerp/ except
+# apps/our_brand (our own code, from Story 1.2 on) -- explicit exclusion
+# lists proved unsafe here (missed a site_config.json containing a real
+# auto-generated DB password, per-site logs, and a stray screenshot).
+myerp/*
+!myerp/apps
+myerp/apps/*
+!myerp/apps/our_brand
