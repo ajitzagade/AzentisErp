@@ -1,0 +1,4 @@
+## Deferred from: code review of story-1.1 (2026-07-11)
+
+- Whitelist gitignore inside `our_brand` relies on unrelated global patterns (`*.env`, `*.log`, `__pycache__/`) for safety rather than a dedicated rule, and `core.ignorecase=true` (macOS default) means a case-variant directory name could theoretically get silently whitelisted. Actionable once `our_brand` exists (Story 1.2) — add a dedicated `.gitignore` rule inside the `our_brand` app for its own build artifacts/secrets rather than relying on the repo-wide generic patterns, and confirm the app directory name is created with exact-case `our_brand`.
+- `apps/erpnext`'s shallow clone (`--depth 1`) — the claim that a future `git fetch`/checkout to a newer pinned commit "still works" is asserted in Story 1.1, not tested. Actionable at Epic 5 Story 5.4 (staged upstream update rollout) — verify shallow-clone re-pin actually works before relying on it, or `git fetch --unshallow` first if needed.
