@@ -269,7 +269,7 @@ Pricing is **flexible, negotiated per client** rather than a fixed published tie
 
 ## Integration and Dependencies
 
-- **ERPNext** is forked under our GitHub org (`version-15` branch, `bench get-app erpnext https://github.com/OUR_ORG/erpnext`). **Frappe Framework itself is *not* forked** — installed from the official `frappe/frappe` repo via `bench init --frappe-branch version-15` — because no customization touches the framework layer; only the ERPNext app layer and the separate Branding App carry customization. *(Resolved decision — see §10.)*
+- **ERPNext** is forked under our GitHub org — `ajitzagade` (`version-15` branch, `bench get-app erpnext https://github.com/ajitzagade/erpnext`). **Frappe Framework itself is *not* forked** — installed from the official `frappe/frappe` repo via `bench init --frappe-branch version-15` — because no customization touches the framework layer; only the ERPNext app layer and the separate Branding App carry customization. *(Resolved decision — see §10.)*
 - **MariaDB**, **Redis**, **Nginx/Gunicorn/Supervisor** are inherited infrastructure dependencies from the Frappe stack (see `addendum.md` for versions/config).
 - Upstream release cadence is out of this platform's control; §4.7 (FR-15/16) governs how updates are absorbed.
 

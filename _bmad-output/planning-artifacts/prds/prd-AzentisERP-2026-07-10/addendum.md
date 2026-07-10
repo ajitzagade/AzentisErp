@@ -17,7 +17,7 @@
 1. Install prerequisites: Python 3.10+, Node 18+, MariaDB 10.6+, Redis, wkhtmltopdf, yarn, git, pip.
 2. `pip install frappe-bench`
 3. `bench init myerp --frappe-branch version-15` *(stock Frappe Framework from official `frappe/frappe` — not forked; PRD §10.7 decision)*
-4. `bench get-app erpnext https://github.com/OUR_ORG/erpnext --branch version-15` *(forked ERPNext under our org)*
+4. `bench get-app erpnext https://github.com/ajitzagade/erpnext --branch version-15` *(forked ERPNext under our org)*
 5. `bench new-site dev.local`
 6. `bench --site dev.local install-app erpnext`
 7. `bench start`

@@ -23,7 +23,7 @@ So that we have a controlled, mergeable codebase to build every later customizat
 
 **Given** GitHub org access
 **When** ERPNext is forked under our org
-**Then** `github.com/OUR_ORG/erpnext` exists as our controlled copy, on the `version-15` branch (PRD §10.7)
+**Then** `github.com/ajitzagade/erpnext` exists as our controlled copy, on the `version-15` branch (PRD §10.7)
 
 **Given** a bench initialized with stock Frappe Framework (`bench init --frappe-branch version-15`, from the official `frappe/frappe` — deliberately NOT forked, per AD-1/PRD §10.7)
 **When** `bench get-app erpnext` pulls from our fork's URL
