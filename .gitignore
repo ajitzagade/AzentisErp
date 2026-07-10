@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code local settings (machine-specific permissions, not shared)
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# Secrets / local env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# BMad Method tool installation (treat like node_modules -- not project work product)
+.agents/
+.claude/skills/
+_bmad/bmm/
+_bmad/cis/
+_bmad/wds/
+_bmad/tea/
+_bmad/bmb/
+_bmad/bmad-loop/
+_bmad/core/

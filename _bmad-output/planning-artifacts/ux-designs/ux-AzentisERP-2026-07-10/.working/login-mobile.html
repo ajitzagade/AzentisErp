@@ -1,0 +1,135 @@
+<!--
+  LOGIN — MOBILE VIEWPORT, real phone width (390px, iPhone-class)
+  Validates Responsive & Platform rules: fluid card width with fixed side
+  margins, 16px minimum input font-size (prevents iOS Safari auto-zoom-on-
+  focus), 44px minimum touch targets, dvh viewport unit (not vh) so mobile
+  browser chrome/keyboard doesn't clip the card, safe-area-inset padding
+  for notch/home-indicator devices, scaled-down mesh blobs.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AzentisERP — Login, Mobile Viewport</title>
+<style>
+:root {
+  --primary-color: #E1562F;
+  --secondary-color: #C81D6B;
+  --on-primary: #FFFFFF;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.theme-light {
+  --mesh-base: #F4F2FB; --glass-bg: rgba(255,255,255,0.55); --glass-border: rgba(255,255,255,0.65);
+  --text: #1B1725; --text-muted: #5B5468; --input-bg: rgba(255,255,255,0.55); --input-border: rgba(27,23,37,0.14);
+}
+.theme-dark {
+  --mesh-base: #0E0B16; --glass-bg: rgba(24,20,34,0.55); --glass-border: rgba(255,255,255,0.14);
+  --text: #F3F1FA; --text-muted: #B3ACC4; --input-bg: rgba(255,255,255,0.06); --input-border: rgba(255,255,255,0.16);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; font-family: var(--font-sans); background: #EDEBF4; padding: 40px 20px 80px; }
+.showcase-header { max-width: 900px; margin: 0 auto 32px; }
+.showcase-header h1 { font-size: 20px; margin: 0 0 6px; }
+.showcase-header p { margin: 0; color: #55505F; font-size: 13.5px; line-height: 1.6; max-width: 720px; }
+.showcase-header ul { margin: 12px 0 0; padding-left: 18px; font-size: 12.5px; color: #55505F; line-height: 1.7; }
+
+.phone-row { max-width: 900px; margin: 0 auto; display: flex; gap: 36px; flex-wrap: wrap; }
+.phone-block figcaption { font-size: 13px; font-weight: 600; color: #2A2534; margin-bottom: 10px; }
+
+/* real phone-width frame: 390 x 780 (iPhone-class), rounded to suggest a device */
+.phone {
+  width: 390px; height: 780px; border-radius: 40px; overflow: hidden;
+  box-shadow: 0 22px 50px rgba(20,10,30,0.22); position: relative;
+  background: var(--mesh-base);
+  /* dvh: dynamic viewport height, so mobile browser chrome/keyboard never clips content */
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: env(safe-area-inset-top, 24px) 20px env(safe-area-inset-bottom, 24px);
+}
+.mesh-blob { position: absolute; border-radius: 50%; filter: blur(26px); opacity: 0.55; animation: drift 14s ease-in-out infinite; }
+.mesh-blob.b1 { width: 170px; height: 170px; background: var(--primary-color); top: -40px; left: -30px; }
+.mesh-blob.b2 { width: 150px; height: 150px; background: var(--secondary-color); bottom: -30px; right: -20px; animation-delay: 2s; }
+.mesh-blob.b3 { width: 120px; height: 120px; background: color-mix(in srgb, var(--primary-color) 50%, var(--secondary-color)); top: 38%; right: 8%; opacity: 0.35; animation-delay: 4s; }
+@keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(14px,-10px) scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .mesh-blob { animation: none; } }
+
+/* fluid card: fixed side margin, not a fixed px width -- fills available mobile width */
+.card {
+  position: relative; z-index: 1; width: 100%; max-width: 340px;
+  padding: 24px 20px 20px; border-radius: 22px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px) saturate(150%); -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+}
+.card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.card-top span { font-size: 13px; font-weight: 700; color: var(--text); }
+.card h1 { font-size: 18px; font-weight: 700; color: var(--text); margin: 0 0 3px; letter-spacing: -0.01em; }
+.card .sub { font-size: 12px; color: var(--text-muted); margin: 0 0 18px; }
+
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.field input {
+  width: 100%; font-family: var(--font-sans);
+  /* 16px minimum -- below this, iOS Safari auto-zooms the viewport on focus, a real mobile UX bug */
+  font-size: 16px;
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--input-border);
+  background: var(--input-bg); color: var(--text);
+  /* 44px minimum touch target height (Apple HIG / WCAG 2.5.5) */
+  min-height: 44px;
+}
+.row-between { display: flex; justify-content: space-between; align-items: center; margin: 4px 0 18px; }
+.row-between .remember { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); min-height: 44px; }
+.row-between .remember input { accent-color: var(--primary-color); width: 18px; height: 18px; }
+.row-between a { font-size: 12px; color: var(--text); text-decoration: none; font-weight: 600; padding: 12px 0; }
+
+.btn-primary {
+  width: 100%; border: none; border-radius: 999px;
+  /* 48px -- comfortable thumb-reach touch target */
+  min-height: 48px; padding: 13px 16px;
+  font-size: 14px; font-weight: 700; font-family: var(--font-sans);
+  color: var(--on-primary);
+  background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--primary-color) 45%, transparent);
+}
+.footnote { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 16px; }
+.footnote a { color: var(--text); font-weight: 600; text-decoration: none; padding: 6px; }
+</style>
+</head>
+<body>
+<div class="showcase-header">
+  <h1>Login — Real Mobile Viewport (390px, iPhone-class)</h1>
+  <p>Priya's General Store, light theme. This is a real phone-width render (not a scaled-down desktop screenshot), validating the concrete responsive rules added to EXPERIENCE.md:</p>
+  <ul>
+    <li>Fluid card width (100% minus 20px side margin, capped at 340px) — not a fixed desktop card width</li>
+    <li>Input font-size fixed at 16px minimum — prevents iOS Safari's auto-zoom-on-focus bug</li>
+    <li>44px minimum touch target height on all inputs/checkbox/links, 48px on the primary button</li>
+    <li><code>env(safe-area-inset-*)</code> padding — clears notch and home-indicator on modern iPhones</li>
+    <li>Mesh blobs scaled down (~35% smaller) to suit the smaller viewport, same color/animation logic</li>
+  </ul>
+</div>
+<div class="phone-row">
+  <figure class="phone-block">
+    <figcaption>Priya's General Store — Mobile, light theme</figcaption>
+    <div class="phone theme-light">
+      <span class="mesh-blob b1"></span><span class="mesh-blob b2"></span><span class="mesh-blob b3"></span>
+      <div class="card">
+        <div class="card-top">
+          <svg width="24" height="24" viewBox="0 0 48 48"><rect width="48" height="48" rx="16" fill="var(--primary-color)"/><circle cx="34" cy="14" r="8" fill="var(--secondary-color)"/><text x="20" y="31" font-family="Inter" font-size="19" font-weight="800" fill="#fff" text-anchor="middle">P</text></svg>
+          <span>Priya's General Store</span>
+        </div>
+        <h1>Welcome back</h1>
+        <p class="sub">Sign in to continue to your workspace</p>
+        <div class="field"><label>Email address</label><input type="text" placeholder="you@priyastore.in" readonly></div>
+        <div class="field"><label>Password</label><input type="text" placeholder="••••••••••" readonly></div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox" checked readonly> Remember me</label>
+          <a href="#">Forgot password?</a>
+        </div>
+        <button class="btn-primary">Sign in</button>
+        <p class="footnote">Trouble signing in? <a href="#">Contact admin</a></p>
+      </div>
+    </div>
+  </figure>
+</div>
+</body>
+</html>

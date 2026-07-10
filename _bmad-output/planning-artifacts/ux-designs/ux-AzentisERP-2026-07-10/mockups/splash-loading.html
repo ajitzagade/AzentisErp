@@ -1,0 +1,76 @@
+<!--
+  SPLASH / LOADING SCREEN — Hero surface, per DESIGN.md
+  Bridges the branded login moment into the inherited ERPNext desk UI.
+  Same mesh-background language as login, reduced: centered logo mark +
+  loading indicator only, no card, no form. Respects prefers-reduced-motion.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AzentisERP — Splash / Loading</title>
+<style>
+:root {
+  --primary-color: #6D28D9;
+  --secondary-color: #06B6D4;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.tenant-priya { --primary-color: #E1562F; --secondary-color: #C81D6B; }
+.theme-light { --mesh-base: #F4F2FB; --text: #1B1725; --text-muted: #5B5468; }
+.theme-dark { --mesh-base: #0E0B16; --text: #F3F1FA; --text-muted: #B3ACC4; }
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font-sans); background: #EDEBF4; padding: 48px 24px 96px; }
+.showcase-header { max-width: 1180px; margin: 0 auto 40px; }
+.showcase-header h1 { font-size: 22px; margin: 0 0 6px; }
+.showcase-header p { margin: 0; color: #55505F; font-size: 14px; line-height: 1.6; max-width: 760px; }
+
+.frame-grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 900px) { .frame-grid { grid-template-columns: 1fr; } }
+.frame-block figcaption { font-size: 13px; font-weight: 600; color: #2A2534; margin-bottom: 10px; }
+
+.frame {
+  width: 100%; aspect-ratio: 780/500; border-radius: 22px; overflow: hidden;
+  box-shadow: 0 22px 50px rgba(20,10,30,0.22); position: relative;
+  background: var(--mesh-base); display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 20px;
+}
+.mesh-blob { position: absolute; border-radius: 50%; filter: blur(34px); opacity: 0.55; animation: drift 14s ease-in-out infinite; }
+.mesh-blob.b1 { width: 260px; height: 260px; background: var(--primary-color); top: -60px; left: -40px; }
+.mesh-blob.b2 { width: 220px; height: 220px; background: var(--secondary-color); bottom: -50px; right: -30px; animation-delay: 2s; }
+.mesh-blob.b3 { width: 180px; height: 180px; background: color-mix(in srgb, var(--primary-color) 50%, var(--secondary-color)); top: 40%; right: 15%; opacity: 0.35; animation-delay: 4s; }
+@keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(24px,-18px) scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .mesh-blob { animation: none; } }
+
+.logo-mark { position: relative; z-index: 1; width: 56px; height: 56px; }
+.loading-label { position: relative; z-index: 1; font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--text-muted); border-top-color: var(--text); animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-top-color: var(--text-muted); } }
+</style>
+</head>
+<body>
+<div class="showcase-header">
+  <h1>Splash / Loading — Hero surface</h1>
+  <p>Same mesh-background language as login, reduced to a centered logo mark and loading indicator. No card, no form, no interactive elements during normal operation. Auto-dismisses once the desk UI is ready.</p>
+</div>
+<div class="frame-grid">
+  <figure class="frame-block">
+    <figcaption>AzentisERP — Light theme</figcaption>
+    <div class="frame theme-light">
+      <span class="mesh-blob b1"></span><span class="mesh-blob b2"></span><span class="mesh-blob b3"></span>
+      <svg class="logo-mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="16" fill="var(--primary-color)"/><circle cx="34" cy="14" r="8" fill="var(--secondary-color)"/><text x="20" y="31" font-family="Inter" font-size="19" font-weight="800" fill="#fff" text-anchor="middle">A</text></svg>
+      <div class="loading-label"><span class="spinner"></span>Setting up your workspace…</div>
+    </div>
+  </figure>
+  <figure class="frame-block">
+    <figcaption>Priya's General Store — Dark theme</figcaption>
+    <div class="frame theme-dark tenant-priya">
+      <span class="mesh-blob b1"></span><span class="mesh-blob b2"></span><span class="mesh-blob b3"></span>
+      <svg class="logo-mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="16" fill="var(--primary-color)"/><circle cx="34" cy="14" r="8" fill="var(--secondary-color)"/><text x="20" y="31" font-family="Inter" font-size="19" font-weight="800" fill="#fff" text-anchor="middle">P</text></svg>
+      <div class="loading-label"><span class="spinner"></span>Setting up your workspace…</div>
+    </div>
+  </figure>
+</div>
+</body>
+</html>

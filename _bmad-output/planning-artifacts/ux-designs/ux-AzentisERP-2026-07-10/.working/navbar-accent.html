@@ -1,0 +1,82 @@
+<!--
+  DESK-CHROME NAVBAR ACCENT — the ONLY branding surface inside the
+  inherited ERPNext desk UI. Flat solid fill, tenant logo, no gradient,
+  no blur, no animation. Everything below the navbar is untouched stock
+  Frappe/ERPNext styling (approximated here as plain list/table chrome
+  to show the accent doesn't clash with dense working UI).
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AzentisERP — Desk Navbar Accent</title>
+<style>
+:root { --primary-color: #6D28D9; --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+.tenant-priya { --primary-color: #E1562F; }
+.theme-light { --bg: #F7F7F8; --panel: #FFFFFF; --border: #E4E4E7; --text: #18181B; --text-muted: #71717A; }
+.theme-dark  { --bg: #16161A; --panel: #1F1F24; --border: #2C2C33; --text: #F4F4F5; --text-muted: #A1A1AA; }
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font-sans); background: #EDEBF4; padding: 48px 24px 96px; }
+.showcase-header { max-width: 1180px; margin: 0 auto 40px; }
+.showcase-header h1 { font-size: 22px; margin: 0 0 6px; }
+.showcase-header p { margin: 0; color: #55505F; font-size: 14px; line-height: 1.6; max-width: 760px; }
+
+.frame-grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 900px) { .frame-grid { grid-template-columns: 1fr; } }
+.frame-block figcaption { font-size: 13px; font-weight: 600; color: #2A2534; margin-bottom: 10px; }
+
+.frame { width: 100%; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 30px rgba(20,10,30,0.16); background: var(--bg); }
+
+.navbar { background: var(--primary-color); padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+.navbar .logo { width: 22px; height: 22px; border-radius: 6px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; }
+.navbar .name { font-size: 13px; font-weight: 700; color: #fff; }
+.navbar .spacer { flex: 1; }
+.navbar .avatar { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+
+.body-content { padding: 16px; }
+.row-title { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 12px; }
+.table { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.trow { display: flex; padding: 9px 12px; font-size: 12.5px; color: var(--text); border-bottom: 1px solid var(--border); background: var(--panel); }
+.trow:last-child { border-bottom: none; }
+.trow.head { font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+.trow span { flex: 1; }
+</style>
+</head>
+<body>
+<div class="showcase-header">
+  <h1>Desk-Chrome Navbar Accent — the only branding surface inside the working app</h1>
+  <p>Flat, solid tenant-primary-color fill plus logo. No gradient, no glass, no blur, no animation — everything below the navbar is untouched stock ERPNext styling (approximated here). Proves the accent reads clearly without competing with dense working data.</p>
+</div>
+<div class="frame-grid">
+  <figure class="frame-block">
+    <figcaption>AzentisERP — Light desk theme</figcaption>
+    <div class="frame theme-light">
+      <div class="navbar"><span class="logo">A</span><span class="name">AzentisERP</span><span class="spacer"></span><span class="avatar"></span></div>
+      <div class="body-content">
+        <p class="row-title">Sales Invoices</p>
+        <div class="table">
+          <div class="trow head"><span>Invoice</span><span>Customer</span><span>Status</span><span>Amount</span></div>
+          <div class="trow"><span>SINV-0042</span><span>Acme Traders</span><span>Paid</span><span>₹18,400</span></div>
+          <div class="trow"><span>SINV-0041</span><span>Krishna Stores</span><span>Overdue</span><span>₹6,200</span></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <figure class="frame-block">
+    <figcaption>Priya's General Store — Dark desk theme</figcaption>
+    <div class="frame theme-dark tenant-priya">
+      <div class="navbar"><span class="logo">P</span><span class="name">Priya's General Store</span><span class="spacer"></span><span class="avatar"></span></div>
+      <div class="body-content">
+        <p class="row-title">Stock Entries</p>
+        <div class="table">
+          <div class="trow head"><span>Entry</span><span>Item</span><span>Type</span><span>Qty</span></div>
+          <div class="trow"><span>STE-0018</span><span>Rice (25kg)</span><span>Receipt</span><span>+40</span></div>
+          <div class="trow"><span>STE-0017</span><span>Cooking Oil</span><span>Issue</span><span>-12</span></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+</div>
+</body>
+</html>

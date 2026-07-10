@@ -1,0 +1,383 @@
+<!--
+  DIRECTION 1 — "Split-Screen Editorial"
+  Rationale: A wide split-screen layout pairs a warm, editorial brand panel (serif
+  display headline over a primary→secondary gradient) with a calm, humanist-sans
+  form panel on the right. Soft shadows, generously rounded corners (16px) and
+  generous whitespace read as premium and considered rather than templated —
+  aimed at business owners who want software that feels established and trustworthy,
+  not like a stock admin-panel login.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AzentisERP — Direction 1: Split-Screen Editorial</title>
+<style>
+/* ==========================================================================
+   TENANT BRAND COLORS
+   These two custom properties are the ONLY values a tenant controls at
+   runtime. In production they are written into a <style>:root{...}</style>
+   block (or inline on <html>) by the server at page-load time, sourced from
+   the tenant record — never compiled into a stylesheet.
+   --------------------------------------------------------------------------
+   Tenant A — AzentisERP (platform default, pre-customization)
+     --primary-color:   #3B4A9F   deep indigo-blue
+     --secondary-color: #D9A441   warm gold accent
+
+   Tenant B — Priya's General Store (sample tenant · retail · Pune, India)
+     --primary-color:   #D9612B   terracotta orange
+     --secondary-color: #F2B705   marigold yellow
+   ==========================================================================
+   NOTE ON THIS FILE: to demonstrate both tenants side-by-side in one mockup,
+   Tenant A's colors live on :root (as they would in production) and Tenant B's
+   colors are re-declared on a scoping class (.tenant-priya). At runtime only
+   ONE tenant's values ever exist on :root at a time.
+   ========================================================================== */
+:root {
+  --primary-color: #3B4A9F;
+  --secondary-color: #D9A441;
+  --on-primary: #FFFFFF;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.tenant-priya {
+  --primary-color: #D9612B;
+  --secondary-color: #F2B705;
+}
+.theme-light {
+  --bg: #F7F5F1;
+  --surface: #FFFFFF;
+  --surface-2: #FBFAF6;
+  --text: #221F1A;
+  --text-muted: #6B6459;
+  --border: #E7E1D4;
+  --shadow: rgba(35, 28, 12, 0.14);
+}
+.theme-dark {
+  --bg: #17161C;
+  --surface: #211F27;
+  --surface-2: #26242D;
+  --text: #F4F1EA;
+  --text-muted: #A8A39A;
+  --border: #38363F;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #EDEBE4;
+  padding: 48px 24px 96px;
+  color: #221F1A;
+}
+.showcase-header { max-width: 1180px; margin: 0 auto 40px; }
+.showcase-header h1 { font-size: 22px; margin: 0 0 6px; }
+.showcase-header p { margin: 0; color: #55524A; font-size: 14px; line-height: 1.6; max-width: 760px; }
+.tag-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.tag { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; background: #221F1A; color: #fff; padding: 5px 10px; border-radius: 20px; }
+
+.frame-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 900px) { .frame-grid { grid-template-columns: 1fr; } }
+
+.frame-block figcaption {
+  font-size: 13px;
+  font-weight: 600;
+  color: #34312A;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.frame-block figcaption .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-color, #3B4A9F); }
+
+.frame {
+  width: 100%;
+  aspect-ratio: 860 / 540;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(20, 16, 8, 0.18);
+  display: flex;
+  background: var(--bg);
+}
+
+/* ---- split page layout (the actual login page design) ---- */
+.split-page { display: flex; width: 100%; height: 100%; }
+.brand-panel {
+  flex: 0 0 42%;
+  position: relative;
+  padding: 34px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(155deg, var(--primary-color) 0%, color-mix(in srgb, var(--primary-color) 55%, var(--secondary-color)) 65%, var(--secondary-color) 130%);
+  color: #fff;
+  overflow: hidden;
+}
+.brand-panel::before {
+  content: "";
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+.brand-panel::after {
+  content: "";
+  position: absolute;
+  left: -40px; bottom: -70px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.10);
+}
+.brand-mark { display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+.brand-mark svg { display: block; }
+.brand-mark span { font-family: var(--font-serif); font-size: 16px; letter-spacing: 0.01em; }
+.brand-copy { position: relative; z-index: 1; }
+.brand-copy h2 { font-family: var(--font-serif); font-weight: 400; font-size: 26px; line-height: 1.25; margin: 0 0 12px; }
+.brand-copy p { font-size: 12.5px; line-height: 1.6; margin: 0 0 16px; color: rgba(255,255,255,0.86); max-width: 30ch; }
+.feature-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+.feature-list li { font-size: 11.5px; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.92); }
+.feature-list li::before {
+  content: "";
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.form-panel {
+  flex: 1;
+  background: var(--surface);
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+.form-panel h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--text);
+  margin: 0 0 2px;
+}
+.form-panel .sub { font-size: 12px; color: var(--text-muted); margin: 0 0 6px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 11.5px; font-weight: 600; color: var(--text); }
+.field .row-between { display: flex; justify-content: space-between; align-items: baseline; }
+.field .row-between a { font-size: 11px; color: var(--primary-color); text-decoration: none; }
+.field input {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+}
+.field input::placeholder { color: var(--text-muted); }
+.remember { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--text-muted); }
+.remember input { accent-color: var(--primary-color); }
+.btn-primary {
+  margin-top: 4px;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--on-primary);
+  background: var(--primary-color);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--primary-color) 45%, transparent);
+  cursor: pointer;
+}
+.footnote { font-size: 10.5px; color: var(--text-muted); text-align: center; margin-top: 4px; }
+.footnote a { color: var(--primary-color); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="showcase-header">
+  <h1>Direction 1 — Split-Screen Editorial</h1>
+  <p>Warm serif display type on a gradient brand panel, paired with a calm humanist-sans form. Soft elevation, 16–20px radii, static (no motion). Shown below for both example tenants, in light and dark theme, to prove the layout survives a full brand-color swap.</p>
+  <div class="tag-row">
+    <span class="tag">Split-screen</span>
+    <span class="tag">Editorial serif accent</span>
+    <span class="tag">Soft shadow</span>
+    <span class="tag">Rounded</span>
+    <span class="tag">Static</span>
+  </div>
+</div>
+
+<div class="frame-grid">
+
+  <!-- Tenant A — Light -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>AzentisERP — Light theme (platform default)</figcaption>
+    <div class="frame theme-light">
+      <div class="split-page">
+        <div class="brand-panel">
+          <div class="brand-mark">
+            <svg width="30" height="30" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="rgba(255,255,255,0.16)"/><text x="24" y="32" font-family="Georgia, serif" font-size="21" font-weight="700" fill="#fff" text-anchor="middle">A</text></svg>
+            <span>AzentisERP</span>
+          </div>
+          <div class="brand-copy">
+            <h2>Run your business, beautifully.</h2>
+            <p>One workspace for inventory, invoicing, and your team — built for growing companies.</p>
+            <ul class="feature-list">
+              <li>Real-time inventory &amp; stock</li>
+              <li>GST-ready invoicing</li>
+              <li>Team &amp; role permissions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-panel">
+          <h1>Welcome back</h1>
+          <p class="sub">Sign in to your AzentisERP workspace</p>
+          <div class="field">
+            <label>Work email</label>
+            <input type="text" placeholder="you@company.com" readonly>
+          </div>
+          <div class="field">
+            <div class="row-between"><label>Password</label><a href="#">Forgot password?</a></div>
+            <input type="text" placeholder="••••••••••" readonly>
+          </div>
+          <label class="remember"><input type="checkbox" checked readonly> Keep me signed in on this device</label>
+          <button class="btn-primary">Sign in</button>
+          <p class="footnote">Need access? <a href="#">Contact your workspace admin</a></p>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Tenant A — Dark -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>AzentisERP — Dark theme (platform default)</figcaption>
+    <div class="frame theme-dark">
+      <div class="split-page">
+        <div class="brand-panel">
+          <div class="brand-mark">
+            <svg width="30" height="30" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="rgba(255,255,255,0.16)"/><text x="24" y="32" font-family="Georgia, serif" font-size="21" font-weight="700" fill="#fff" text-anchor="middle">A</text></svg>
+            <span>AzentisERP</span>
+          </div>
+          <div class="brand-copy">
+            <h2>Run your business, beautifully.</h2>
+            <p>One workspace for inventory, invoicing, and your team — built for growing companies.</p>
+            <ul class="feature-list">
+              <li>Real-time inventory &amp; stock</li>
+              <li>GST-ready invoicing</li>
+              <li>Team &amp; role permissions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-panel">
+          <h1>Welcome back</h1>
+          <p class="sub">Sign in to your AzentisERP workspace</p>
+          <div class="field">
+            <label>Work email</label>
+            <input type="text" placeholder="you@company.com" readonly>
+          </div>
+          <div class="field">
+            <div class="row-between"><label>Password</label><a href="#">Forgot password?</a></div>
+            <input type="text" placeholder="••••••••••" readonly>
+          </div>
+          <label class="remember"><input type="checkbox" checked readonly> Keep me signed in on this device</label>
+          <button class="btn-primary">Sign in</button>
+          <p class="footnote">Need access? <a href="#">Contact your workspace admin</a></p>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Tenant B — Light -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>Priya's General Store — Light theme</figcaption>
+    <div class="frame theme-light tenant-priya">
+      <div class="split-page">
+        <div class="brand-panel">
+          <div class="brand-mark">
+            <svg width="30" height="30" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="rgba(255,255,255,0.18)"/><text x="24" y="32" font-family="Georgia, serif" font-size="21" font-weight="700" fill="#fff" text-anchor="middle">P</text></svg>
+            <span>Priya's General Store</span>
+          </div>
+          <div class="brand-copy">
+            <h2>Har din ka hisaab, aasaan.</h2>
+            <p>Billing, stock and udhaar — all in one place for your shop in Pune.</p>
+            <ul class="feature-list">
+              <li>Daily sales &amp; billing</li>
+              <li>Stock &amp; supplier orders</li>
+              <li>Customer credit (udhaar) book</li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-panel">
+          <h1>Welcome back</h1>
+          <p class="sub">Sign in to Priya's General Store</p>
+          <div class="field">
+            <label>Work email</label>
+            <input type="text" placeholder="you@priyastore.in" readonly>
+          </div>
+          <div class="field">
+            <div class="row-between"><label>Password</label><a href="#">Forgot password?</a></div>
+            <input type="text" placeholder="••••••••••" readonly>
+          </div>
+          <label class="remember"><input type="checkbox" checked readonly> Keep me signed in on this device</label>
+          <button class="btn-primary">Sign in</button>
+          <p class="footnote">Need access? <a href="#">Contact your workspace admin</a></p>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Tenant B — Dark -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>Priya's General Store — Dark theme</figcaption>
+    <div class="frame theme-dark tenant-priya">
+      <div class="split-page">
+        <div class="brand-panel">
+          <div class="brand-mark">
+            <svg width="30" height="30" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="rgba(255,255,255,0.18)"/><text x="24" y="32" font-family="Georgia, serif" font-size="21" font-weight="700" fill="#fff" text-anchor="middle">P</text></svg>
+            <span>Priya's General Store</span>
+          </div>
+          <div class="brand-copy">
+            <h2>Har din ka hisaab, aasaan.</h2>
+            <p>Billing, stock and udhaar — all in one place for your shop in Pune.</p>
+            <ul class="feature-list">
+              <li>Daily sales &amp; billing</li>
+              <li>Stock &amp; supplier orders</li>
+              <li>Customer credit (udhaar) book</li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-panel">
+          <h1>Welcome back</h1>
+          <p class="sub">Sign in to Priya's General Store</p>
+          <div class="field">
+            <label>Work email</label>
+            <input type="text" placeholder="you@priyastore.in" readonly>
+          </div>
+          <div class="field">
+            <div class="row-between"><label>Password</label><a href="#">Forgot password?</a></div>
+            <input type="text" placeholder="••••••••••" readonly>
+          </div>
+          <label class="remember"><input type="checkbox" checked readonly> Keep me signed in on this device</label>
+          <button class="btn-primary">Sign in</button>
+          <p class="footnote">Need access? <a href="#">Contact your workspace admin</a></p>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+</div>
+
+</body>
+</html>

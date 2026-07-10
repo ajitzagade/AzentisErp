@@ -1,0 +1,288 @@
+<!--
+  DIRECTION 2 — "Centered Minimal / Geometric"
+  Rationale: A small, sharp-cornered card floats on a quiet dot-grid field with
+  no illustration and almost no color outside the two brand tokens — every pixel
+  of color is either primary or secondary, so a tenant's palette reads instantly.
+  Uppercase micro-labels, tight geometric spacing and a pill-shaped button give it
+  a confident, no-nonsense "we know exactly what this software does" personality,
+  closer to modern fintech/dev-tool products than a decorative consumer login.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AzentisERP — Direction 2: Centered Minimal Geometric</title>
+<style>
+/* ==========================================================================
+   TENANT BRAND COLORS
+   Runtime-injected as CSS custom properties on :root by the server per
+   tenant. Nothing else in this stylesheet is tenant-specific.
+   --------------------------------------------------------------------------
+   Tenant A — AzentisERP (platform default, pre-customization)
+     --primary-color:   #2563EB   saturated blue
+     --secondary-color: #7C3AED   violet
+
+   Tenant B — Priya's General Store (sample tenant · retail · Pune, India)
+     --primary-color:   #B5462F   brick red
+     --secondary-color: #E8A33D   mustard / turmeric gold
+   ==========================================================================
+   NOTE: Tenant A lives on :root exactly as production would inject it.
+   Tenant B is re-declared on a scoping class (.tenant-priya) purely so both
+   tenants can be compared side-by-side in this single mockup file.
+   ========================================================================== */
+:root {
+  --primary-color: #2563EB;
+  --secondary-color: #7C3AED;
+  --on-primary: #FFFFFF;
+  --radius: 4px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Avenir Next", Roboto, Helvetica, Arial, sans-serif;
+}
+.tenant-priya {
+  --primary-color: #B5462F;
+  --secondary-color: #E8A33D;
+}
+.theme-light {
+  --bg: #FAFAF9;
+  --dot: #E4E4E1;
+  --surface: #FFFFFF;
+  --text: #101012;
+  --text-muted: #6C6C72;
+  --border: #E2E2E0;
+}
+.theme-dark {
+  --bg: #0B0B0D;
+  --dot: #1E1E22;
+  --surface: #141416;
+  --text: #F5F5F4;
+  --text-muted: #8B8B92;
+  --border: #232326;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #F0F0EE;
+  padding: 48px 24px 96px;
+  color: #101012;
+}
+.showcase-header { max-width: 1180px; margin: 0 auto 40px; }
+.showcase-header h1 { font-size: 22px; margin: 0 0 6px; }
+.showcase-header p { margin: 0; color: #55555A; font-size: 14px; line-height: 1.6; max-width: 760px; }
+.tag-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.tag { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; background: #101012; color: #fff; padding: 5px 10px; border-radius: 3px; }
+
+.frame-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 900px) { .frame-grid { grid-template-columns: 1fr; } }
+
+.frame-block figcaption {
+  font-size: 13px;
+  font-weight: 600;
+  color: #26262A;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.frame-block figcaption .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-color, #2563EB); }
+
+.frame {
+  width: 100%;
+  aspect-ratio: 760 / 500;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(10,10,12,0.16);
+  background: var(--bg);
+  background-image: radial-gradient(var(--dot) 1.4px, transparent 1.4px);
+  background-size: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- centered card login page ---- */
+.card {
+  width: 300px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 26px 22px;
+}
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+.card-top span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.card h1 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 3px;
+}
+.card .sub { font-size: 11.5px; color: var(--text-muted); margin: 0 0 18px; }
+
+.field { margin-bottom: 12px; }
+.field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 9px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+.row-between { display: flex; justify-content: space-between; align-items: center; margin: 2px 0 14px; }
+.row-between .remember { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+.row-between .remember input { accent-color: var(--primary-color); }
+.row-between a { font-size: 11px; color: var(--primary-color); text-decoration: none; font-weight: 600; }
+
+.btn-primary {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+  color: var(--on-primary);
+  background: linear-gradient(90deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 55%, var(--secondary-color)));
+  cursor: pointer;
+}
+.footnote { font-size: 10.5px; color: var(--text-muted); text-align: center; margin-top: 14px; }
+.footnote a { color: var(--secondary-color); text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="showcase-header">
+  <h1>Direction 2 — Centered Minimal / Geometric</h1>
+  <p>A small sharp-cornered card on a quiet dot-grid field. Uppercase micro-labels, tight geometric type, pill CTA, flat 1px borders (no shadow language inside the card). Shown for both example tenants, in light and dark theme.</p>
+  <div class="tag-row">
+    <span class="tag">Centered card</span>
+    <span class="tag">Geometric sans</span>
+    <span class="tag">Flat / bordered</span>
+    <span class="tag">Sharp corners</span>
+    <span class="tag">Static</span>
+  </div>
+</div>
+
+<div class="frame-grid">
+
+  <!-- Tenant A — Light -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>AzentisERP — Light theme (platform default)</figcaption>
+    <div class="frame theme-light">
+      <div class="card">
+        <div class="card-top">
+          <svg width="22" height="22" viewBox="0 0 48 48"><rect width="48" height="48" rx="4" fill="var(--primary-color)"/><rect x="30" y="4" width="14" height="14" rx="3" fill="var(--secondary-color)"/><text x="19" y="31" font-family="var(--font-sans)" font-size="20" font-weight="800" fill="#fff" text-anchor="middle">A</text></svg>
+          <span>AzentisERP</span>
+        </div>
+        <h1>Sign in to your workspace</h1>
+        <p class="sub">Enter your credentials to continue</p>
+        <div class="field"><label>Email address</label><input type="text" placeholder="you@company.com" readonly></div>
+        <div class="field"><label>Password</label><input type="text" placeholder="••••••••••" readonly></div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox" checked readonly> Stay signed in</label>
+          <a href="#">Forgot?</a>
+        </div>
+        <button class="btn-primary">Sign in</button>
+        <p class="footnote">Access issue? <a href="#">Contact admin</a></p>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Tenant A — Dark -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>AzentisERP — Dark theme (platform default)</figcaption>
+    <div class="frame theme-dark">
+      <div class="card">
+        <div class="card-top">
+          <svg width="22" height="22" viewBox="0 0 48 48"><rect width="48" height="48" rx="4" fill="var(--primary-color)"/><rect x="30" y="4" width="14" height="14" rx="3" fill="var(--secondary-color)"/><text x="19" y="31" font-family="var(--font-sans)" font-size="20" font-weight="800" fill="#fff" text-anchor="middle">A</text></svg>
+          <span>AzentisERP</span>
+        </div>
+        <h1>Sign in to your workspace</h1>
+        <p class="sub">Enter your credentials to continue</p>
+        <div class="field"><label>Email address</label><input type="text" placeholder="you@company.com" readonly></div>
+        <div class="field"><label>Password</label><input type="text" placeholder="••••••••••" readonly></div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox" checked readonly> Stay signed in</label>
+          <a href="#">Forgot?</a>
+        </div>
+        <button class="btn-primary">Sign in</button>
+        <p class="footnote">Access issue? <a href="#">Contact admin</a></p>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Tenant B — Light -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>Priya's General Store — Light theme</figcaption>
+    <div class="frame theme-light tenant-priya">
+      <div class="card">
+        <div class="card-top">
+          <svg width="22" height="22" viewBox="0 0 48 48"><rect width="48" height="48" rx="4" fill="var(--primary-color)"/><rect x="30" y="4" width="14" height="14" rx="3" fill="var(--secondary-color)"/><text x="19" y="31" font-family="var(--font-sans)" font-size="20" font-weight="800" fill="#fff" text-anchor="middle">P</text></svg>
+          <span>Priya's General Store</span>
+        </div>
+        <h1>Sign in to your workspace</h1>
+        <p class="sub">Enter your credentials to continue</p>
+        <div class="field"><label>Email address</label><input type="text" placeholder="you@priyastore.in" readonly></div>
+        <div class="field"><label>Password</label><input type="text" placeholder="••••••••••" readonly></div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox" checked readonly> Stay signed in</label>
+          <a href="#">Forgot?</a>
+        </div>
+        <button class="btn-primary">Sign in</button>
+        <p class="footnote">Access issue? <a href="#">Contact admin</a></p>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Tenant B — Dark -->
+  <figure class="frame-block">
+    <figcaption><span class="dot"></span>Priya's General Store — Dark theme</figcaption>
+    <div class="frame theme-dark tenant-priya">
+      <div class="card">
+        <div class="card-top">
+          <svg width="22" height="22" viewBox="0 0 48 48"><rect width="48" height="48" rx="4" fill="var(--primary-color)"/><rect x="30" y="4" width="14" height="14" rx="3" fill="var(--secondary-color)"/><text x="19" y="31" font-family="var(--font-sans)" font-size="20" font-weight="800" fill="#fff" text-anchor="middle">P</text></svg>
+          <span>Priya's General Store</span>
+        </div>
+        <h1>Sign in to your workspace</h1>
+        <p class="sub">Enter your credentials to continue</p>
+        <div class="field"><label>Email address</label><input type="text" placeholder="you@priyastore.in" readonly></div>
+        <div class="field"><label>Password</label><input type="text" placeholder="••••••••••" readonly></div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox" checked readonly> Stay signed in</label>
+          <a href="#">Forgot?</a>
+        </div>
+        <button class="btn-primary">Sign in</button>
+        <p class="footnote">Access issue? <a href="#">Contact admin</a></p>
+      </div>
+    </div>
+  </figure>
+
+</div>
+
+</body>
+</html>
