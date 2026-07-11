@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-10
-last_updated: 2026-07-11 (story 1.2 created, ready-for-dev)
+last_updated: 2026-07-11 (story 1.2 implemented, in review)
 project: AzentisERP
 project_key: NOKEY
 tracking_system: file-system
@@ -50,7 +50,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   epic-1: in-progress
   1-1-pull-erpnext-and-bootstrap-the-base-platform: done
-  1-2-platform-brand-override: ready-for-dev
+  1-2-platform-brand-override: review
   1-3-visual-theming-colors-and-the-login-page: backlog
   1-4-splash-screen-branded-loading-transition: backlog
   1-5-branded-transactional-email: backlog

@@ -4,7 +4,7 @@ baseline_commit: 12f1496
 
 # Story 1.2: Platform Brand Override
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -25,27 +25,27 @@ so that no page shows "Frappe" or "ERPNext" as the product name.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Scaffold the Branding App (AC: 1)
-  - [ ] `bench new-app our_brand` — run from the bench root (`myerp/`, created in Story 1.1). Working name only per PRD §1 (final brand name unconfirmed) — use `our_brand` exactly, do not invent a different name.
-  - [ ] Confirm the scaffold lands at `myerp/apps/our_brand/` — this is the one path under the bench that Story 1.1's `.gitignore` whitelist already tracks (`!myerp/apps/our_brand`). Verify with `git status`/`git add -A --dry-run` from the repo root that the new app's files are now staged as trackable (not gitignored) — this is the first real test of that whitelist pattern, deferred from Story 1.1's own review specifically for this moment.
-- [ ] Task 2: Set app metadata in `hooks.py` (AC: 1)
-  - [ ] Set `app_name = "our_brand"` (the internal Frappe app identifier — stays lowercase/snake_case regardless of the eventual public-facing brand name)
-  - [ ] Set `app_title` to the public-facing product name (working title "AzentisERP" per PRD, unless the user specifies otherwise when this story runs — ask if unclear, do not silently invent a different name than what's used throughout planning)
-  - [ ] Set `app_publisher` to the operator's name/company (ask the user for this value if not already established — it wasn't specified in planning and has no safe default to assume)
-  - [ ] Set `app_description` (PRD suggests "Unified Business Management Platform" as a placeholder — confirm with user or use as-is)
-  - [ ] Set `app_logo_url = "/assets/our_brand/images/logo.png"` pointing at a logo asset placed in Task 3
-- [ ] Task 3: Add logo and favicon assets (AC: 1, 2)
-  - [ ] Create `myerp/apps/our_brand/our_brand/public/images/` directory
-  - [ ] Place a logo image at `logo.png` (or matching whatever `app_logo_url` in Task 2 points to) — ask the user for an actual logo file; if none is available yet, use a simple, clearly-placeholder image (do not fabricate a "real" logo design — that's a design decision outside this story's and this agent's scope) and flag it as a placeholder needing replacement in Completion Notes
-  - [ ] Favicon: Frappe's favicon mechanism is normally set via `website_context` or a site-level `Website Settings` field, not purely `hooks.py` — confirm the correct v15 mechanism during implementation (check `frappe/frappe`'s own `hooks.py` for the pattern it uses) rather than assuming; this wasn't fully specified in planning
-- [ ] Task 4: Install `our_brand` on the dev site and verify desk chrome (AC: 1, 2)
-  - [ ] `bench --site dev.local install-app our_brand`
-  - [ ] `bench start` (if not already running from Story 1.1), load the desk UI, confirm: browser tab title shows the new `app_title`, not "Frappe"/"ERPNext"; navbar/sidebar shows no visible "Frappe" or "ERPNext" string
-  - [ ] Explicitly check the places Frappe's own branding tends to hide: browser tab favicon+title, the `/app` sidebar header, any "About" or system console page — do not assume checking one page is sufficient
-- [ ] Task 5: Verify isolation — uninstall/reinstall round-trip (AC: 3, 4)
-  - [ ] `bench --site dev.local uninstall-app our_brand` (or equivalent) — confirm stock Frappe/ERPNext branding returns cleanly, no leftover broken state
-  - [ ] Reinstall `our_brand` afterward so the site is left in the intended branded state, not the uninstalled one
-  - [ ] `git status`/`git diff` in `myerp/apps/frappe` and `myerp/apps/erpnext` — confirm still completely clean (matches Story 1.1's baseline: `frappe @ 105b1793`, `erpnext @ b5f78461`) — this is the concrete AC4 check, not just an assumption that nothing touched them
+- [x] Task 1: Scaffold the Branding App (AC: 1)
+  - [x] `bench new-app our_brand` — scaffolded at `myerp/apps/our_brand/`, installed and built cleanly (`bench build --app our_brand` ran automatically as part of the command). App Title "Azentis" (confirmed with user, inferred from the provided logo), App Publisher "Ajit Zagade" (asked, no safe default existed), App Description "Unified Business Management Platform", App Email `ajitzagade3@gmail.com`, App License `mit` (default accepted).
+  - [x] **Real fix required, not in the original task list:** `bench new-app` initializes its own nested `.git` repository inside the new app by default. This made git see `myerp/apps/our_brand/` as one opaque "embedded repository" (like a broken submodule) instead of tracking its individual files — confirmed via `git add -A --dry-run myerp/` showing a single `add 'myerp/apps/our_brand/'` line with a submodule warning, instead of the actual file list. Removed `myerp/apps/our_brand/.git` entirely; re-verified `git add -A --dry-run myerp/` now correctly lists all 17 individual scaffold files as trackable. Story 1.1's whitelist pattern (`!myerp/apps/our_brand`) itself was correct — the nested repo was the actual problem, and would have silently broken tracking for anyone who ran `bench new-app` without knowing to check for this.
+- [x] Task 2: Set app metadata in `hooks.py` (AC: 1)
+  - [x] `app_name = "our_brand"`
+  - [x] `app_title = "Azentis"` — confirmed with user (inferred from the provided logo, not "AzentisERP" the project working title)
+  - [x] `app_publisher = "Ajit Zagade"` — asked, no safe default existed
+  - [x] `app_description = "Unified Business Management Platform"` — PRD's suggested placeholder, used as-is
+  - [x] `app_logo_url = "/assets/our_brand/images/logo.png"` — added (this field is not part of `bench new-app`'s interactive scaffold prompts, had to be added manually after Task 3 placed the actual asset)
+- [x] Task 3: Add logo and favicon assets (AC: 1, 2)
+  - [x] Created `myerp/apps/our_brand/our_brand/public/images/`
+  - [x] Real, finished logo provided by user (not a placeholder): `logo.png` (canonical, = dark-bg variant per user's explicit reference), plus `logo-dark-bg.png` and `logo-light-bg.png` kept as named variants for Story 1.3's dark/light theme work (`DESIGN.md` already specifies both). All copied from user-provided source files, 861×889px RGBA.
+  - [x] Favicon investigated and confirmed **out of scope for this story**: Frappe v15's favicon is a `Website Settings` DocType field (`frappe/frappe/website/doctype/website_settings/website_settings.py`), not a `hooks.py` mechanism — grepped Frappe's own `hooks.py` and confirmed it sets no favicon hook itself, only `app_logo_url`. AC1 only requires `app_logo_url`; AC2 is about visible text strings, not icon imagery. Deferred to Story 1.6 (Tenant Settings already has a planned `favicon` field) as originally scoped in planning — not a gap, a correct boundary.
+- [x] Task 4: Install `our_brand` on the dev site and verify desk chrome (AC: 1, 2)
+  - [x] `bench --site dev.local install-app our_brand` — succeeded
+  - [x] **Real problem found and fixed, not anticipated by the original task list:** installing `our_brand` and setting `hooks.py`'s `app_title`/`app_logo_url` was NOT sufficient — the desk `<title>` still read "Frappe" and the navbar logo still showed Frappe's, verified via an authenticated `curl` against `/app/home` (session cookie from `/api/method/login`), not just visual inspection. Root-caused in Frappe's own source: (1) the desk `<title>` tag (`frappe/www/app.html`) resolves via `frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or "Frappe"` — a **Website Settings** data field, never `hooks.py`'s `app_title` at all; (2) the navbar logo (`frappe/core/doctype/navbar_settings/navbar_settings.py:get_app_logo`) checks `Website Settings.app_logo` / `Navbar Settings.app_logo` first, and only falls back to `hooks.py`'s `app_logo_url` hook when neither is set — and that fallback only works cleanly for exactly 2 apps; with `our_brand` installed alongside `frappe` and `erpnext` (both of which also define `app_logo_url`), the fallback logic's `if len(logos) == 2` special case doesn't trigger, and it silently keeps Frappe's own logo instead. **Fix:** added `our_brand/install.py` with an `after_install` hook that sets `Website Settings.app_name`/`app_logo` directly (the actually-authoritative source), wired via `hooks.py`'s `after_install`. Re-verified via the same authenticated curl check: `<title>Azentis</title>`, `"app_logo_url": "/assets/our_brand/images/logo.png"` — both correct.
+  - [x] Checked the full rendered desk HTML for remaining "Frappe"/"ERPNext" occurrences beyond title/logo — found only: internal asset URLs (`/assets/frappe/...`, not visible text), the legitimate installed-apps metadata list (frappe/erpnext's own real identity, unmodified per AD-1 — not a branding bug), and `System Settings.app_name` (a dead code path once `Website Settings.app_name` is set, never actually rendered). No further chrome-visible text found.
+- [x] Task 5: Verify isolation — uninstall/reinstall round-trip (AC: 3, 4)
+  - [x] `bench --site dev.local uninstall-app our_brand --yes` — succeeded. Also added a `before_uninstall` hook (`our_brand/install.py`) clearing `Website Settings.app_name`/`app_logo` back to `None` — without this, AC3's "stock branding returns cleanly" would have been false (the Website Settings values would have persisted as leftover state after uninstall, exactly the kind of thing AC3 is checking for). Verified via authenticated curl: `<title>Frappe</title>`, `"app_logo_url": "/assets/erpnext/images/erpnext-logo.svg"` (2-app fallback correctly resolves to erpnext's logo once `our_brand` is gone — expected stock behavior, not a bug).
+  - [x] Reinstalled `our_brand` — `after_install` fired automatically this time (unlike the first install, done before the hook existed, which needed a manual `bench execute our_brand.install.after_install`). Re-verified: `<title>Azentis</title>`, our logo path — both correct, site left in the intended branded state.
+  - [x] `git status`/`git diff --stat` in `myerp/apps/frappe` and `myerp/apps/erpnext` — both completely clean. Commit hashes re-confirmed unchanged from Story 1.1's baseline: `frappe @ 105b17938839f4e5c6cdff817d42afc40c3bcc32`, `erpnext @ b5f784612d5b7969b72848dda5b22f10d3a8f764`.
 
 ## Dev Notes
 
@@ -86,8 +86,34 @@ so that no page shows "Frappe" or "ERPNext" as the product name.
 
 ### Agent Model Used
 
+Claude Sonnet 5
+
 ### Debug Log References
+
+- Authenticated verification commands (not persisted as files, run inline): `curl -c cookies.txt -d "usr=Administrator&pwd=admin" http://127.0.0.1:8000/api/method/login` then `curl -b cookies.txt -H "Host: dev.local" http://127.0.0.1:8000/app/home` — used before/after every branding change to check the actual rendered `<title>` and `app_logo_url`, not just hooks.py's declared values. This is what caught the desk-chrome bug (see Completion Notes) that a "hooks.py looks right" check alone would have missed entirely.
+- `bench start` log: `/tmp/bench_start_story1.2.log` (session-local, not committed, same convention as Story 1.1).
 
 ### Completion Notes List
 
+1. **Logo is real, not a placeholder.** User provided a finished "Azentis" logo (861×889px RGBA). Used the dark-bg variant (`azentis_final_dark_bg.png`) as the canonical `logo.png` per the user's explicit reference; also stored `logo-dark-bg.png` and `logo-light-bg.png` (light-bg companion, found alongside in the user's Downloads) as named variants for Story 1.3's dark/light theme work, which `DESIGN.md` already specifies needs both.
+2. **App Title resolved to "Azentis"**, not the "AzentisERP" working title used for the project/repo — confirmed with the user, since the logo is strong evidence of the actual intended product name and the story explicitly flagged not to invent this value.
+3. **App Publisher ("Ajit Zagade") had no safe default and was asked**, per the story's own explicit instruction not to guess it.
+4. **Real bug found and fixed: `bench new-app` creates its own nested `.git` repo by default.** This made the new app invisible to proper git tracking (git saw it as one opaque "embedded repository," not individual files) — removed `myerp/apps/our_brand/.git` and re-verified tracking works file-by-file. This will recur for anyone running `bench new-app` again without knowing to check for it; worth remembering, not a one-off.
+5. **Real, more significant bug found and fixed: `hooks.py`'s `app_title`/`app_logo_url` alone do NOT drive the actual visible desk chrome.** Verified this empirically (authenticated curl against `/app/home`), not assumed. Root cause, traced in Frappe's own source:
+   - The desk `<title>` tag reads `Website Settings.app_name` (falling back to `System Settings.app_name`, then hardcoded `"Frappe"`) — never `hooks.py`'s `app_title` at all.
+   - The navbar logo reads `Website Settings.app_logo` / `Navbar Settings.app_logo` first; only falls back to `hooks.py`'s `app_logo_url` hook if neither is set, and that fallback (`frappe/core/doctype/navbar_settings/navbar_settings.py::get_app_logo`) only has special-case handling for exactly 2 apps defining the hook. With `frappe`, `erpnext`, and `our_brand` all defining `app_logo_url` (3 apps), the fallback silently keeps Frappe's own logo.
+   - **Fix:** added `our_brand/install.py` with `after_install` (sets `Website Settings.app_name`/`app_logo` directly) and `before_uninstall` (clears them back to `None`, so AC3's isolation check — stock branding returning cleanly — actually holds and doesn't leave stale branding data behind). Wired both into `hooks.py`.
+   - This means AC1's literal text ("`app_title`/`app_logo_url` in `hooks.py` reflect our brand") is satisfied by the scaffold alone, but satisfying AC2 (branding actually *visible*) required going beyond what AC1's literal text describes — the story's own Dev Notes anticipated exactly this kind of gap ("a story implementation must leave the system working end-to-end... whether or not it is explicitly written in the story").
+6. **Full uninstall → verify stock branding restored → reinstall → verify branding restored again** round-trip completed for AC3, using the same authenticated-curl verification method both directions, not just the install direction.
+7. **AC4 verified via commit-hash comparison**, not just "git status is clean": `apps/frappe` and `apps/erpnext` HEADs (`105b1793...`, `b5f78461...`) confirmed identical to Story 1.1's recorded baseline, in addition to both being diff-clean.
+8. **Favicon confirmed out of scope**, not skipped without checking: Frappe v15's favicon is a `Website Settings` DocType field, not a `hooks.py` mechanism (grepped Frappe's own `hooks.py`, confirmed it declares no favicon hook). AC1 only requires `app_logo_url`; AC2 is about visible text, not icons. Correctly deferred to Story 1.6 (Tenant Settings already plans a `favicon` field).
+9. **Confirmed the Story 1.1 code review's deferred finding is benign for this case:** the generic `__pycache__/` gitignore pattern correctly excluded `our_brand/our_brand/__pycache__/*.pyc` (compiled Python bytecode created when Frappe imported `hooks.py`/`install.py`) even though it's inside the whitelisted `our_brand` zone — verified via `git add -A --dry-run`.
+
 ### File List
+
+- `myerp/apps/our_brand/` (created — scaffolded via `bench new-app`, nested `.git` removed, 21 files git-trackable)
+  - `our_brand/hooks.py` (app metadata: `app_name`, `app_title`, `app_publisher`, `app_description`, `app_email`, `app_license`, `app_logo_url`, `after_install`, `before_uninstall`)
+  - `our_brand/install.py` (new — `after_install`/`before_uninstall` functions setting/clearing `Website Settings` branding fields)
+  - `our_brand/public/images/logo.png`, `logo-dark-bg.png`, `logo-light-bg.png` (new — user-provided logo assets)
+- `_bmad-output/implementation-artifacts/1-2-platform-brand-override.md` (this file — Tasks, Dev Agent Record)
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified — story status)
