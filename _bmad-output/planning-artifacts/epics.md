@@ -613,3 +613,18 @@ So "isolation" isn't just a design intention.
 **Given** a real upstream re-pin is performed (Story 5.4's process, on staging)
 **When** the new commit is checked out and `bench migrate` completes
 **Then** `our_brand` requires zero code changes to keep working (FR15's stated testable consequence) — and if anything in `our_brand` *does* need adjustment because an upstream hook/API changed, that's documented as a precedent for future updates
+
+---
+
+## Epic 6: Premium Desk UI Theming *(v1.1+, not part of current MVP scope)*
+
+Restyle the inherited ERPNext desk UI (colors, typography, spacing, iconography, native Workspace/dashboard widgets) toward a modern SaaS look via CSS/JS theming — without modifying Frappe/ERPNext source. Realizes FR-17.
+
+**FRs covered:** FR-17
+**Architecture:** AD-12 (theming boundary — CSS/JS injection only, never core source; excludes structural list/table/kanban/search redesign)
+**Prerequisite:** a dedicated UX session (`bmad-ux`, Update mode) to design the actual desk-wide theming tokens and screens — DESIGN.md's current scope is hero-surfaces-only and does not cover this. **Stories below are not yet written** — this entry exists to reserve the epic slot and record the scope/architecture boundary agreed via the Sprint Change Proposal dated 2026-07-12, not to commit to specific implementation stories before that design work exists.
+
+**Known constraints going in** (from the correct-course analysis):
+- No Frappe/ERPNext source file may be modified (PRD §5, AD-1, AD-12).
+- Deep structural redesign of list/table/kanban/global-search views is explicitly out of reach for this epic's CSS/JS-only approach (see FR-17's stated non-goal) — revisit only as a deliberate, separately-scoped decision if this proves insufficient.
+- Every new CSS/JS selector this epic introduces must be recorded for Epic 5's staged-upstream-update verification (Story 5.4/5.5) to re-test against.

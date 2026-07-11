@@ -96,6 +96,8 @@ components:
 
 # Design — AzentisERP Branding Layer
 
+> **Scope note (added 2026-07-12):** this document covers hero surfaces only (login, splash) plus the one desk-chrome accent, exactly as scoped below — that scope is complete and remains valid. A second, separate design pass for desk-wide visual theming (FR-17, Architecture AD-12) is a distinct future initiative, not yet designed, and will get its own dedicated UX session (`bmad-ux`, Update mode) before any implementation stories are written for it. Do not treat this document as covering that scope.
+
 ## Brand & Style
 
 AzentisERP's own product premise is invisible: a tenant should never sense the ERPNext/Frappe foundation underneath. The brand expression carries that — an immersive, animated gradient-mesh backdrop built entirely from the tenant's own two brand colors, with a frosted glass card floating on top. It reads as premium, modern SaaS: the kind of first-screen a founder screenshots and puts on a landing page, not utilitarian back-office software.

@@ -188,9 +188,23 @@ The system supports testing an upstream merge on a staging site before it is app
 **Feature-specific NFRs:**
 - GPLv3 license notices and copyright headers must remain intact through every merge (constraint, not a testable FR by itself — see §Constraints).
 
+### 4.8 Desk UI Visual Theming
+
+**Description:** Beyond the hero-surface branding in §4.1 (login, splash, email), the inherited ERPNext desk UI (lists, forms, dashboards, navigation) can be visually modernized via CSS/JS theming — never by modifying Frappe/ERPNext source. Scope and depth are governed by Architecture AD-12; realizes no user journey directly, this is a platform-quality/perception investment, not a functional capability. **Deferred to v1.1+ — see §6.2.** *(Added 2026-07-12 via Sprint Change Proposal — see `sprint-change-proposal-2026-07-12.md`.)*
+
+#### FR-17: Desk-wide visual theming
+The system allows restyling the inherited desk UI's colors, typography, spacing, iconography, and native Workspace/dashboard widgets via the Branding App's stylesheet/script hooks, without modifying Frappe/ERPNext source files.
+
+**Consequences (testable):**
+- No Frappe/ERPNext source file is modified; `apps/frappe`/`apps/erpnext` remain byte-identical to their pinned upstream commits after this work.
+- An upstream `git fetch`/re-pin (Epic 5, FR-15/16) does not require re-doing this theming work from scratch — CSS/JS selectors are documented and re-verified, not silently broken.
+
+**Explicit non-goal within this FR:** structural redesign of Frappe's list/table/kanban/global-search views (sticky headers, inline row actions, Raycast-style command palette) — these are hard-coded client-side JS classes, not themeable surfaces, and reaching them would require either forking core (violates §5 Non-Goals) or extensive runtime monkey-patching carrying real upstream-fragility risk (see AD-12). Revisit only if FR-17's CSS/JS-only pass proves insufficient and the trade-off is explicitly re-accepted.
+
 ## 5. Non-Goals (Explicit)
 
 - AzentisERP will not modify Frappe or ERPNext core source for any customization — everything ships through the Branding App, hooks, Custom Fields, and Custom DocTypes.
+- AzentisERP will not restructure Frappe/ERPNext's list, table, kanban, or global-search views beyond CSS/JS theming (FR-17) — that depth of change requires forking core, which this project has ruled out (see AD-12 for the theming/fork boundary).
 - AzentisERP will not rebuild RBAC, audit logging, workflow engine, or the REST API — these are inherited from Frappe as-is.
 - AzentisERP will not target non-Indian tax/compliance regimes in v1.
 - AzentisERP will not offer fully self-service client signup (no operator involvement) in v1 — onboarding is operator-triggered (FR-11).
@@ -217,6 +231,7 @@ The system supports testing an upstream merge on a staging site before it is app
 - Multi-server / high-availability deployment — single server supports the Year-1 10-20 tenant target. *(v2)*
 - Formal staged upstream-update tooling/automation (Phase 8) — do the first 1-2 merges manually to learn the real conflict surface before automating. *(v1.1)*
 - Non-GST/international localization. *(not planned)*
+- FR-17 (desk-wide visual theming) — real, scoped, and specced, but not part of the 1-month MVP's success criteria (§7); ship after Epics 1-5 land. *(v1.1)*
 
 ## 7. Success Metrics
 
