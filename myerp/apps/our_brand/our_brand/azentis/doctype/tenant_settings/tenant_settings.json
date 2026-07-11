@@ -15,7 +15,9 @@
   "secondary_color",
   "email_section",
   "email_sender_name",
-  "email_footer_text"
+  "email_footer_text",
+  "modules_section",
+  "enabled_modules"
  ],
  "fields": [
   {
@@ -77,6 +79,17 @@
    "fieldname": "email_footer_text",
    "fieldtype": "Small Text",
    "label": "Email Footer Text"
+  },
+  {
+   "fieldname": "modules_section",
+   "fieldtype": "Section Break",
+   "label": "Modules"
+  },
+  {
+   "fieldname": "enabled_modules",
+   "fieldtype": "Table MultiSelect",
+   "label": "Enabled Modules",
+   "options": "Tenant Enabled Module"
   }
  ],
  "index_web_pages_for_search": 0,

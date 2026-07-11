@@ -137,13 +137,11 @@ before_uninstall = "our_brand.install.before_uninstall"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Tenant Settings": {
+		"on_update": "our_brand.module_rules.sync_blocked_modules",
+	}
+}
 
 # Scheduled Tasks
 # ---------------

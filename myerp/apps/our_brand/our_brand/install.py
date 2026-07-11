@@ -24,6 +24,10 @@ def after_install():
 
 	create_default_email_account()
 
+	from our_brand.module_rules import seed_module_presets
+
+	seed_module_presets()
+
 
 def create_default_email_account():
 	"""Make the Email Account record's own name the visible sender identity
@@ -78,3 +82,9 @@ def before_uninstall():
 
 	if frappe.db.exists("Email Account", "Azentis"):
 		frappe.delete_doc("Email Account", "Azentis", ignore_permissions=True, force=True)
+
+	from our_brand.module_rules import MODULE_PRESETS
+
+	for preset_name in MODULE_PRESETS:
+		if frappe.db.exists("Module Preset", preset_name):
+			frappe.delete_doc("Module Preset", preset_name, ignore_permissions=True, force=True)

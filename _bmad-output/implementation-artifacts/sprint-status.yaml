@@ -64,12 +64,12 @@ development_status:
   2-3-tenant-site-carries-its-own-branding: done
   epic-2-retrospective: optional
 
-  epic-3: backlog
-  3-1-add-module-toggling-to-tenant-settings: backlog
-  3-2-filter-sidebar-by-enabled-modules: backlog
-  3-3-module-preset-data-model: backlog
-  3-4-seed-the-four-business-type-presets: backlog
-  3-5-warn-on-module-dependency-violations: backlog
+  epic-3: done
+  3-1-add-module-toggling-to-tenant-settings: done
+  3-2-filter-sidebar-by-enabled-modules: done
+  3-3-module-preset-data-model: done
+  3-4-seed-the-four-business-type-presets: done
+  3-5-warn-on-module-dependency-violations: done
   epic-3-retrospective: optional
 
   epic-4: backlog
@@ -86,3 +86,8 @@ development_status:
   5-4-staged-upstream-update-rollout: backlog
   5-5-prove-customization-isolation-via-a-real-merge: backlog
   epic-5-retrospective: optional
+
+  # Epic 6 added 2026-07-12 via sprint-change-proposal-2026-07-12.md.
+  # Placeholder only -- no stories yet, blocked on a dedicated UX session
+  # (bmad-ux, Update mode) per the proposal's handoff plan.
+  epic-6: backlog
