@@ -26,12 +26,12 @@ app_logo_url = "/assets/our_brand/images/logo.png"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/our_brand/css/our_brand.css"
-# app_include_js = "/assets/our_brand/js/our_brand.js"
+app_include_css = "/assets/our_brand/css/our_brand.css"
+app_include_js = ["/assets/our_brand/js/splash_retry.js", "/assets/our_brand/js/branding.js"]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/our_brand/css/our_brand.css"
-# web_include_js = "/assets/our_brand/js/our_brand.js"
+web_include_css = "/assets/our_brand/css/our_brand.css"
+web_include_js = "/assets/our_brand/js/branding.js"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "our_brand/public/scss/website"

@@ -4,7 +4,7 @@ baseline_commit: 12f1496
 
 # Story 1.2: Platform Brand Override
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 

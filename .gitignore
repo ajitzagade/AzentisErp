@@ -4,6 +4,7 @@ Thumbs.db
 
 # Claude Code local settings (machine-specific permissions, not shared)
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # Python
 __pycache__/

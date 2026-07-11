@@ -1,0 +1,9 @@
+<div class="centered splash">
+	<img src="{{ splash_image or "/assets/frappe/images/frappe-framework-logo.png" }}"
+		style="max-width: 100px; max-height: 100px;">
+	<div class="azentis-splash-spinner" aria-hidden="true"></div>
+	<div class="azentis-splash-retry" style="display: none;">
+		<p>{{ _("Something went wrong loading your workspace.") }}</p>
+		<button type="button" onclick="location.reload()">{{ _("Retry") }}</button>
+	</div>
+</div>

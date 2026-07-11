@@ -48,20 +48,20 @@ tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 
 development_status:
-  epic-1: in-progress
+  epic-1: done
   1-1-pull-erpnext-and-bootstrap-the-base-platform: done
-  1-2-platform-brand-override: review
-  1-3-visual-theming-colors-and-the-login-page: backlog
-  1-4-splash-screen-branded-loading-transition: backlog
-  1-5-branded-transactional-email: backlog
-  1-6-tenant-settings-data-model: backlog
-  1-7-dynamic-per-tenant-branding-injection: backlog
+  1-2-platform-brand-override: done
+  1-3-visual-theming-colors-and-the-login-page: done
+  1-4-splash-screen-branded-loading-transition: done
+  1-5-branded-transactional-email: done
+  1-6-tenant-settings-data-model: done
+  1-7-dynamic-per-tenant-branding-injection: done
   epic-1-retrospective: optional
 
-  epic-2: backlog
-  2-1-enable-dns-based-multi-tenant-routing: backlog
-  2-2-create-an-isolated-tenant-site: backlog
-  2-3-tenant-site-carries-its-own-branding: backlog
+  epic-2: done
+  2-1-enable-dns-based-multi-tenant-routing: done
+  2-2-create-an-isolated-tenant-site: done
+  2-3-tenant-site-carries-its-own-branding: done
   epic-2-retrospective: optional
 
   epic-3: backlog

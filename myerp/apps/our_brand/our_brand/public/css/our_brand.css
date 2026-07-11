@@ -1,0 +1,365 @@
+/*
+ * Azentis branding layer -- platform-wide accent + login page restyle.
+ * Tokens sourced from DESIGN.md / EXPERIENCE.md (ux-AzentisERP-2026-07-10).
+ *
+ * Platform-default tenant colors only (AD-2/AD-3 dynamic per-tenant
+ * injection is Story 1.7). Login-page rules are scoped under #page-login
+ * (the id Frappe's web.html assigns via container_attributes() for the
+ * /login route) so the mesh/glass hero treatment never leaks onto other
+ * inherited ERPNext/Frappe web pages, per DESIGN.md's "hero surfaces only"
+ * rule.
+ */
+
+:root {
+	--tenant-primary: #6d28d9;
+	--tenant-secondary: #06b6d4;
+	--tenant-on-primary: #ffffff;
+
+	/* Frappe's own global brand variable (drives .btn-primary, links,
+	   --brand-color) across desk + website -- overriding it here is what
+	   makes AC1 ("primary/accent colors match our theme on any page")
+	   take effect without touching a single Frappe/ERPNext template. */
+	--primary: var(--tenant-primary);
+	--brand-color: var(--tenant-primary);
+}
+
+/* ==========================================================================
+   Login page -- hero surface restyle
+   ========================================================================== */
+
+#page-login,
+.splash {
+	--mesh-base: #f4f2fb;
+	--glass-bg: rgba(255, 255, 255, 0.55);
+	--glass-bg-fallback: rgba(255, 255, 255, 0.92);
+	--glass-border: rgba(255, 255, 255, 0.65);
+	--text: #1b1725;
+	--text-muted: #5b5468;
+	--input-bg: rgba(255, 255, 255, 0.55);
+	--input-border: rgba(27, 23, 37, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+	#page-login,
+	.splash {
+		--mesh-base: #0e0b16;
+		--glass-bg: rgba(24, 20, 34, 0.55);
+		--glass-bg-fallback: rgba(24, 20, 34, 0.92);
+		--glass-border: rgba(255, 255, 255, 0.14);
+		--text: #f3f1fa;
+		--text-muted: #b3acc4;
+		--input-bg: rgba(255, 255, 255, 0.06);
+		--input-border: rgba(255, 255, 255, 0.16);
+	}
+}
+
+#page-login .page-content-wrapper {
+	position: relative;
+	min-height: 100dvh;
+	overflow: hidden;
+	background: var(--mesh-base);
+	padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+		env(safe-area-inset-left);
+}
+
+#page-login .page-breadcrumbs,
+#page-login .page-header-wrapper,
+#page-login .page-footer {
+	display: none;
+}
+
+#page-login main.container {
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	position: static;
+}
+
+/* Mesh background -- three blurred blobs via layered radial-gradients on a
+   single pseudo-element, no new DOM nodes. Decorative-only (no text
+   content), so it carries no accessible name and screen readers skip it
+   without needing an explicit aria-hidden attribute we can't add here.
+   Shared by the login page (Story 1.3) and the splash screen (Story 1.4,
+   AC4 -- "no separate logic duplicated for this surface"). .splash is the
+   desk shell's loading overlay (frappe/templates/includes/splash_screen.html,
+   overridden by our_brand); .page-content-wrapper is the login page's outer
+   wrapper (Story 1.3). Same custom properties, same gradient, same
+   animation, same reduced-motion behavior. */
+#page-login .page-content-wrapper::before,
+.splash::before {
+	content: "";
+	inset: 0;
+	background-color: var(--mesh-base);
+	background-image: var(
+		--login-background-image,
+		radial-gradient(circle at 8% 12%, var(--tenant-primary) 0%, transparent 60%),
+		radial-gradient(circle at 92% 88%, var(--tenant-secondary) 0%, transparent 60%),
+		radial-gradient(
+			circle at 72% 28%,
+			color-mix(in srgb, var(--tenant-primary) 50%, var(--tenant-secondary)) 0%,
+			transparent 55%
+		)
+	);
+	background-size: cover;
+	background-position: center;
+	filter: blur(34px);
+	opacity: 0.55;
+	animation: azentis-mesh-drift 14s ease-in-out infinite;
+}
+
+#page-login .page-content-wrapper::before {
+	position: absolute;
+	z-index: 0;
+}
+
+/* .splash itself is a small, absolutely-positioned+centered box (Frappe's
+   own .centered class) -- fixed positioning on its ::before escapes that
+   box to cover the full viewport regardless, and a negative z-index keeps
+   it behind the logo/spinner/retry content painted within .splash's own
+   stacking context. */
+.splash::before {
+	position: fixed;
+	z-index: -1;
+}
+
+@keyframes azentis-mesh-drift {
+	0%,
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+	50% {
+		transform: translate(24px, -18px) scale(1.08);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#page-login .page-content-wrapper::before,
+	.splash::before {
+		animation: none;
+	}
+}
+
+#page-login .page_content {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100dvh;
+	padding: 24px;
+}
+
+#page-login section.for-login,
+#page-login section.for-signup,
+#page-login section.for-forgot,
+#page-login section.for-login-with-email-link,
+#page-login section.for-email-login {
+	width: 100%;
+	max-width: 340px;
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#page-login .page-card-head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+#page-login .app-logo {
+	width: 32px;
+	height: 32px;
+	border-radius: 16px;
+	object-fit: cover;
+}
+
+#page-login .page-card-head h4 {
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--text);
+	letter-spacing: -0.01em;
+	margin: 0;
+}
+
+#page-login .login-content.page-card {
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+	border-radius: 22px;
+	padding: 28px 26px 24px;
+	backdrop-filter: blur(18px) saturate(150%);
+	-webkit-backdrop-filter: blur(18px) saturate(150%);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+	#page-login .login-content.page-card {
+		background: var(--glass-bg-fallback);
+	}
+}
+
+#page-login .form-group {
+	margin-bottom: 12px;
+}
+
+#page-login .form-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--text);
+	margin-bottom: 5px;
+}
+
+#page-login .form-control {
+	width: 100%;
+	font-size: 13px;
+	padding: 10px 12px;
+	border-radius: 12px;
+	border: 1px solid var(--input-border);
+	background: var(--input-bg);
+	color: var(--text);
+}
+
+#page-login .form-control:focus {
+	outline: 2px solid #2684ff;
+	outline-offset: 1px;
+}
+
+#page-login .forgot-password-message,
+#page-login .sign-up-message {
+	font-size: 11px;
+	color: var(--text-muted);
+	text-align: center;
+}
+
+#page-login .forgot-password-message a,
+#page-login .sign-up-message a {
+	color: var(--text);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+#page-login .forgot-password-message a:focus,
+#page-login .sign-up-message a:focus {
+	outline: 2px solid #2684ff;
+	outline-offset: 1px;
+}
+
+#page-login .btn-login {
+	width: 100%;
+	border: none;
+	border-radius: 9999px;
+	padding: 12px 16px;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--tenant-on-primary);
+	background: linear-gradient(120deg, var(--tenant-primary), var(--tenant-secondary));
+	box-shadow: 0 10px 28px color-mix(in srgb, var(--tenant-primary) 45%, transparent);
+}
+
+#page-login .btn-login:focus {
+	outline: 2px solid #2684ff;
+	outline-offset: 2px;
+}
+
+#page-login .social-logins,
+#page-login .login-divider {
+	color: var(--text-muted);
+	font-size: 11px;
+}
+
+/* ==========================================================================
+   Mobile -- below md (768px), per EXPERIENCE.md.Responsive & Platform
+   ========================================================================== */
+@media (max-width: 767px) {
+	#page-login .page_content {
+		padding: 20px;
+	}
+
+	#page-login section.for-login,
+	#page-login section.for-signup,
+	#page-login section.for-forgot,
+	#page-login section.for-login-with-email-link,
+	#page-login section.for-email-login {
+		max-width: 340px;
+		margin: 0 20px;
+	}
+
+	#page-login .login-content.page-card {
+		padding: 24px 20px 20px;
+	}
+
+	/* 16px minimum: below this, iOS Safari auto-zooms the viewport on
+	   input focus -- a real mobile bug, not a style choice. */
+	#page-login .form-control {
+		font-size: 16px;
+		min-height: 44px;
+	}
+
+	#page-login .forgot-password-message a,
+	#page-login .sign-up-message a {
+		display: inline-block;
+		min-height: 44px;
+		line-height: 44px;
+	}
+
+	#page-login .btn-login {
+		min-height: 48px;
+	}
+}
+
+/* ==========================================================================
+   Splash screen -- desk-loading transition (Story 1.4)
+   .splash markup: our_brand's override of
+   frappe/templates/includes/splash_screen.html. Mesh background/dark-mode/
+   reduced-motion rules already declared above, shared with the login page.
+   ========================================================================== */
+
+.splash {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Functional progress indicator, not decorative -- kept animating under
+   prefers-reduced-motion (unlike the mesh drift above), since it
+   communicates real in-progress state rather than playing for atmosphere. */
+.azentis-splash-spinner {
+	width: 28px;
+	height: 28px;
+	border-radius: 9999px;
+	border: 3px solid color-mix(in srgb, var(--tenant-primary) 25%, transparent);
+	border-top-color: var(--tenant-primary);
+	animation: azentis-spin 0.8s linear infinite;
+}
+
+@keyframes azentis-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.azentis-splash-retry {
+	text-align: center;
+	color: var(--text);
+	max-width: 280px;
+}
+
+.azentis-splash-retry p {
+	font-size: 13px;
+	color: var(--text-muted);
+	margin: 0 0 12px;
+}
+
+.azentis-splash-retry button {
+	border: none;
+	border-radius: 9999px;
+	padding: 10px 24px;
+	font-size: 13px;
+	font-weight: 700;
+	font-family: inherit;
+	color: var(--tenant-on-primary);
+	background: linear-gradient(120deg, var(--tenant-primary), var(--tenant-secondary));
+	cursor: pointer;
+}
